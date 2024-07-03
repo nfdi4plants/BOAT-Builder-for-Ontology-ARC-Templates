@@ -68,6 +68,7 @@ ipch/
 
 # Other Visual Studio data
 .vs/
+.vscode/
 
 # Guidance Automation Toolkit
 *.gpState
@@ -126,6 +127,7 @@ ClientBin/
 *.[Pp]ublish.xml
 *.pfx
 *.publishsettings
+node_modules/
 
 # RIA/Silverlight projects
 Generated_Code/
