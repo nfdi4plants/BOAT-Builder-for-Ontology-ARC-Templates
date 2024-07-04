@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+// Set your brand colors
+$excel-primary: #217346;
+$excel-primary30: #639d7d;
+$nfdi-blue-dark: #2D3E50;
+$nfdi-mint: #1FC2A7;
+$nfdi-blue-light: #4fb3d9;
+$nfdi-blue-lighter-20: #72c2e1;
+$nfdi-red: #c21f3a; //#e83151;//#E32746;
+$nfdi-yellow: #FFC000;
+$primarye: $excel-primary;
+$primarye-invert: white;
+
+// 1. Import the initial variables
+@use "bulma/sass" with ( $primary: $nfdi-blue-dark, $success: $nfdi-mint, $info: $nfdi-blue-light, $danger: $nfdi-red, $warning: $nfdi-yellow, $custom-colors: ( "primarye":($primarye, $primarye-invert)), );
+@forward "bulma/sass/themes";
+@use "bulma/sass/utilities/css-variables" as cv;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+    background-color: #A2B975;
+    width: 100vw;
+    height: 100vh; 	
+}
