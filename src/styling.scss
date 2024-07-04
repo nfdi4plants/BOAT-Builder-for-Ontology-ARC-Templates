@@ -26,4 +26,13 @@ body {
     background-color: #A2B975;
     width: 100vw;
     height: 100vh; 	
+    color: black;
+    overflow:hidden
 }
+
+.navbar {
+    background-color: #222a35;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }

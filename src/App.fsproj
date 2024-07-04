@@ -4,8 +4,13 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="index.html" />
+    <Compile Include="Types.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="Builder.fs" />
+    <Compile Include="NavBar.fs" />
+    <Compile Include="Help.fs" />
+    <Compile Include="Contact.fs" />
+    <Compile Include="View.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>
