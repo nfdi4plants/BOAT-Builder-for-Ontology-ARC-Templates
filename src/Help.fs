@@ -6,4 +6,4 @@ open Feliz.Bulma
 
 type Help =
     [<ReactComponent>]
-    static member Main() = ()
+    static member Main() = Html.div []

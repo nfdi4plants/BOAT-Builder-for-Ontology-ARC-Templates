@@ -5,22 +5,26 @@ open Feliz.Bulma
 
 
 type NavBar =
-    static member Subpagelink(setPage: Types.Page   -> unit, statePage: Types.Page) =
+    static member Subpagelink(setPage: Types.Page -> unit, statePage: Types.Page) =
         Html.div [
             let logo = StaticFile.import "./img/DataPLANT_logo_bg_transparent.svg"
             Bulma.navbar [
-                prop.className "navbar"
+                prop.className "navbar py-0"
                 prop.children [
                     Bulma.navbarBrand.div [
+                        // Bulma.navbarItem.a [
+                        //     prop.href "https://www.nfdi4plants.de/"
+                        //     prop.target.blank 
+                        //     prop.className "bg-transparent border-0 hover:bg-[#222a35]"
+                        //     prop.children [
+                        //         Html.img [ 
+                        //             prop.src logo
+                        //             prop.className "w-full h-full"
+                        //         ]
+                        //     ]
+                        // ]
                         Bulma.navbarItem.a [
-                            prop.href "https://www.nfdi4plants.de/"
-                            prop.target.blank 
-                            prop.children [
-                                Html.img [ 
-                                    prop.src logo
-                                    prop.className "w-full h-full"
-                                ]
-                            ]
+                            Html.img [ prop.src logo; prop.height 40; prop.width 150]
                         ]
                     ]
                     Bulma.navbarMenu [
@@ -55,6 +59,27 @@ type NavBar =
                                         Html.i [prop.className "fa-brands fa-github"; prop.style [style.fontSize (length.rem 3)]]
                                     ]
                                 ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+            //replace this with navbar from home
+            Bulma.footer [
+                prop.className "content has-text-centered footer"
+                prop.children [
+                    Html.div [
+                        prop.className "inline-flex"
+                        prop.children [
+                            Html.p [
+                                prop.text "This is a footer. By"
+                                prop.className "pr-1" 
+                            ]
+                            Html.a [
+                                prop.text "ndfdi4plants"
+                                prop.href "https://www.nfdi4plants.de/"
+                                prop.target.blank 
+                                prop.className "underline text-blue-400"
                             ]
                         ]
                     ]

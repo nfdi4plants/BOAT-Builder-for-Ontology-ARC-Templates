@@ -8,4 +8,4 @@ importSideEffects "./styling.scss"
 
 
 let root = ReactDOM.createRoot(document.getElementById "feliz-app")
-root.render(Components.Builder.Main())
+root.render(App.View.Main())

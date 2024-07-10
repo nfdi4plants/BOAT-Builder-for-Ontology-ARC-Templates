@@ -22,17 +22,29 @@ $primarye-invert: white;
 @tailwind utilities;
 
 
+html {
+    overflow:auto
+}
 body {
     background-color: #A2B975;
     width: 100vw;
     height: 100vh; 	
     color: black;
-    overflow:hidden
+    overflow: auto
 }
 
 .navbar {
-    background-color: #222a35;
+    background-color: #10242b;
     position: sticky;
     top: 0;
     z-index: 10;
   }
+
+.footer {
+    background-color: #10242b;
+    position: absolute;
+    color:white;
+    bottom: 0;
+    width: 100%;
+    height: 1rem;  
+}
