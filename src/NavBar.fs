@@ -62,9 +62,9 @@ type NavBar =
                             ]
                         ]
                     ]
-
                 ]
             ]
+            //replace this with navbar from home
             Bulma.footer [
                 prop.className "content has-text-centered footer"
                 prop.children [
