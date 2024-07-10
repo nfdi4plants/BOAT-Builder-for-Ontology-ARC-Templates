@@ -1,6 +1,7 @@
 namespace App
 
 open Feliz
+open Feliz.Bulma
 
 type View =
     [<ReactComponent>]
@@ -8,11 +9,9 @@ type View =
         let currentpage,setpage = React.useState(Types.Page.Builder) //Reagiert beim clicken. Start state ist der Counter ->noch in Srat menü umändern
         printfn "%A" currentpage 
         Html.div [
-            prop.children [ 
-                Html.a [           
-                    Components.NavBar.Subpagelink(setpage,currentpage)
+            prop.children [    
+                Components.NavBar.Subpagelink(setpage,currentpage)
                     //Components.NavBar.Counter(setpage, currentpage)
-                ]
                 match currentpage with
                 |Types.Page.Builder -> Components.Builder.Main()
                 |Types.Page.Contact -> Components.Contact.Main() 
