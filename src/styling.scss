@@ -22,12 +22,15 @@ $primarye-invert: white;
 @tailwind utilities;
 
 
+html {
+    overflow:auto
+}
 body {
     background-color: #A2B975;
     width: 100vw;
     height: 100vh; 	
     color: black;
-    overflow:hidden
+    overflow: auto
 }
 
 .navbar {
