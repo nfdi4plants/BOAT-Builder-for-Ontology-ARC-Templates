@@ -23,14 +23,16 @@ $primarye-invert: white;
 
 
 html {
-    overflow:auto
+    overflow:auto;
+    
 }
 body {
     background-color: #A2B975;
     width: 100vw;
     height: 100vh; 	
     color: black;
-    overflow: auto
+    overflow: auto;
+    overflow-x: hidden;
 }
 
 .navbar {
@@ -38,6 +40,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 10;
+    width: 100%
   }
 
 .footer {
@@ -46,5 +49,5 @@ body {
     color:white;
     bottom: 0;
     width: 100%;
-    height: 1rem;  
+    height: 1rem !important;  
 }
