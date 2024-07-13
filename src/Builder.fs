@@ -30,7 +30,13 @@ type Builder =
                     ]
                 ]
             ]
-            
+            Bulma.button.button [
+              prop.text "tesdt"
+            ]
+            Html.button [
+                prop.className "p-2 bg-slate-500 text-white hover:bg-slate-600"
+                prop.text "testing123"
+            ]
         ]
         
     
