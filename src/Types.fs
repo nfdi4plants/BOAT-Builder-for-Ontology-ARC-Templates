@@ -1,7 +1,7 @@
 module Types
 
 type Protocoltext = {
-    Content: string list
+    Content: string
 }
 
 type Annotation = {
