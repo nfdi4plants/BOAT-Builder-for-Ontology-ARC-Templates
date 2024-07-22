@@ -1,36 +1,31 @@
 namespace Components
 
 open Feliz
-open Feliz.Router
 open Feliz.Bulma
 open Browser.Dom
+open Types
 
 module private Helper =
-    let annotationlist: string list = [
-                match (Map.tryFind pubIndex interactionState) with
-                |Some interactions ->
-                    for interaction in interactions do
-                        yield! interaction.Partner1.Split([|' '|])
-                        yield! interaction.Partner2.Split([|' '|])
-                |None -> ()
-            ]
 
-    let ontologylist: string list = [
-                match (Map.tryFind pubIndex interactionState) with
-                |Some interactions ->
-                    for interaction in interactions do
-                        yield! interaction.Partner1.Split([|' '|])
-                        yield! interaction.Partner2.Split([|' '|])
-                |None -> ()
-            ]
+    let addAnnotation (newAnnotation: Annotation, protoIndex: int, state: Map<int, Annotation>) = 
+        state.Add (protoIndex, newAnnotation)    
+        // |> updateAnnotations pubIndex 
+        // reset()  //resets
 
-    // let activeWordList: string array = 
-    //         input1.Split([|' '|])|> Array.append (input2.Split([|' '|]))
+    // let ontologylist: string list = [
+    //             match (Map.tryFind pubIndex interactionState) with
+    //             |Some interactions ->
+    //                 for interaction in interactions do
+    //                     yield! interaction.Partner1.Split([|' '|])
+    //                     yield! interaction.Partner2.Split([|' '|])
+    //             |None -> ()
+    //         ]
 
 type Builder =
     [<ReactComponent>]
     static member Main() =
-        let (selectedText, setText) = React.useState ("")
+        let (AnnotationState: Annotation list, setAnnotationState) = React.useState ([])
+        // let (selectedText, setText) = React.useState ("")
         Html.div [
             Bulma.columns [
                 prop.className "pt-16 px-5"
@@ -50,7 +45,10 @@ type Builder =
                                 Bulma.button.button [
                                     prop.text "Add selected"
                                     prop.onClick (fun e ->
-                                    setText (window.getSelection().ToString()))
+                                        let term = window.getSelection().ToString()
+                                        let newAnno = term::AnnotationState
+                                        setAnnotationState newAnno
+                                    )
                                 ]
                             ]
                         ]
@@ -60,9 +58,10 @@ type Builder =
                             Bulma.block [
                                 prop.text "Annotations" //exchange with uploaded file name
                             ]
+                            //for every annotation one block
                             Bulma.block [
                                 prop.className "text-justify bg-[#ECBBC3] border-[#10242b] border-4 p-3"
-                                prop.text selectedText
+                                prop.text (AnnotationState.ToString()) //
                             ] //exchange with uploaded string list, parsed from uploaded protocol 
                         ]
                     ]
