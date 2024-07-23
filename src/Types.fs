@@ -1,16 +1,16 @@
 module Types
 
 type Protocoltext = {
-    Content: string
+    Content: string list
 }
 
 type Annotation = {
     Key: string
 }
 
-type Annotations = {
-    Annotation: Annotation list
-}
+// type Annotations = {
+//     Annotation: Annotation list
+// }
 
 [<RequireQualifiedAccess>]
 

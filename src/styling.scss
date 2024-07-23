@@ -21,6 +21,7 @@ html {
     overflow:auto;
     
 }
+
 body {
     background-color: #A2B975;
     width: 100vw;
@@ -36,7 +37,7 @@ body {
     top: 0px;
     z-index: 10;
     width: 100%
-  }
+}
 
 .footer {
     background-color: #10242b;
@@ -44,5 +45,6 @@ body {
     color:white;
     bottom: 0;
     width: 100%;
+    z-index: 0;
     height: 1rem !important;  
 }

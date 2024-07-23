@@ -4,28 +4,34 @@ open Feliz
 open Feliz.Bulma
 open Browser.Dom
 open Types
+open Fable.SimpleJson
+open Fable.Core.JsInterop
 
-module private Helper =
-
-    let addAnnotation (newAnnotation: Annotation, protoIndex: int, state: Map<int, Annotation>) = 
-        state.Add (protoIndex, newAnnotation)    
-        // |> updateAnnotations pubIndex 
-        // reset()  //resets
-
-    // let ontologylist: string list = [
-    //             match (Map.tryFind pubIndex interactionState) with
-    //             |Some interactions ->
-    //                 for interaction in interactions do
-    //                     yield! interaction.Partner1.Split([|' '|])
-    //                     yield! interaction.Partner2.Split([|' '|])
-    //             |None -> ()
-    //         ]
+module List =
+  let rec removeAt index list =
+      match index, list with
+      | _, [] -> failwith "Index out of bounds"
+      | 0, _ :: tail -> tail
+      | _, head :: tail -> head :: removeAt (index - 1) tail
 
 type Builder =
     [<ReactComponent>]
     static member Main() =
-        let (AnnotationState: Annotation list, setAnnotationState) = React.useState ([])
-        // let (selectedText, setText) = React.useState ("")
+        let isLocalStorageClear (key:string) () =
+            match (Browser.WebStorage.localStorage.getItem key) with
+            | null -> true // Local storage is clear if the item doesn't exist
+            | _ -> false //if false then something exists and the else case gets started
+
+        let initialInteraction (id: string) =
+            if isLocalStorageClear id () = true then []
+            else Json.parseAs<Annotation list> (Browser.WebStorage.localStorage.getItem id)  
+
+        let (AnnotationState: Annotation list, setAnnotationState) = React.useState (initialInteraction "Annotations")
+
+        let setLocalStorageAnnotation (id: string)(nextAnnos: Annotation list) =
+            let JSONString = Json.stringify nextAnnos 
+            Browser.WebStorage.localStorage.setItem(id, JSONString)
+
         Html.div [
             Bulma.columns [
                 prop.className "pt-16 px-5"
@@ -46,8 +52,14 @@ type Builder =
                                     prop.text "Add selected"
                                     prop.onClick (fun e ->
                                         let term = window.getSelection().ToString()
-                                        let newAnno = term::AnnotationState
-                                        setAnnotationState newAnno
+                                        if window.getSelection().ToString().Length = 0 then ()
+                                        elif term = " " then ()
+                                        else 
+                                            let newAnno = {Key = term}::AnnotationState
+                                            newAnno
+                                            |> fun t ->
+                                            t |> setAnnotationState 
+                                            t |> setLocalStorageAnnotation "Annotations"
                                     )
                                 ]
                             ]
@@ -58,21 +70,35 @@ type Builder =
                             Bulma.block [
                                 prop.text "Annotations" //exchange with uploaded file name
                             ]
-                            //for every annotation one block
-                            Bulma.block [
-                                prop.className "text-justify bg-[#ECBBC3] border-[#10242b] border-4 p-3"
-                                prop.text (AnnotationState.ToString()) //
-                            ] //exchange with uploaded string list, parsed from uploaded protocol 
+                            for a in 0 .. (AnnotationState.Length - 1)  do
+                                Bulma.block [
+                                    prop.className "text-justify bg-[#ECBBC3] border-[#10242b] border-4 p-3"
+                                    prop.children [
+                                        Html.button [
+                                            prop.className "delete float-right m-0.5"
+                                            prop.onClick (fun _ -> 
+                                            let newAnno = List.removeAt a AnnotationState 
+                                            newAnno
+                                            |> fun t ->
+                                            t |> setAnnotationState 
+                                            t |> setLocalStorageAnnotation "Annotations"
+                                            )
+                                        ]
+                                        Html.text ( AnnotationState.[a].Key)
+                                    ]
+                                ]
                         ]
                     ]
                 ]
             ]
         ]
         
-    
+        
+        // <div class="notification is-danger">
+        // <button class="delete"></button>
+        // Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit
+        // amet, consectetur adipiscing elit
+        // </div>
 
-// <div class="columns">
-//   <div class="column is-two-thirds">is-two-thirds</div>
-//   <div class="column">Auto</div>
-//   <div class="column">Auto</div>
-// </div>
+        
+    

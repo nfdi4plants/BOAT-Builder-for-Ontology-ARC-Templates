@@ -22,7 +22,7 @@ type NavBar =
                     ]
                     Bulma.navbarMenu [
                         Bulma.navbarStart.div [
-                            Bulma.navbarItem.div [ prop.text "BOAT" ]
+                            Bulma.navbarItem.div [ prop.text "BOAT - Builder for Ontology ARC Templates"; prop.className "font-semibold" ]
                         ]
                         
                         Bulma.navbarEnd.div [
@@ -32,12 +32,12 @@ type NavBar =
                                 prop.onClick (fun _ -> setPage(Types.Page.Builder)) 
                             ]
                             Bulma.navbarItem.a [ 
-                                prop.text "Restart"
+                                prop.text "Download"
                                 prop.className "hover:bg-[#3f8fae]"
                                 prop.onClick (fun _ -> ()) 
                             ]
                             Bulma.navbarItem.a [ 
-                                prop.text "Download"
+                                prop.text "Restart"
                                 prop.className "hover:bg-[#3f8fae]"
                             ]
                             Bulma.navbarItem.a [ 
@@ -59,7 +59,7 @@ type NavBar =
                                     prop.className "w-full h-full"
                                 ]
                             ]
-                        ]
+                            ]
                         ]
                     ]
                 ]
