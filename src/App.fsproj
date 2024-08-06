@@ -12,6 +12,7 @@
     <Compile Include="Contact.fs" />
     <Compile Include="View.fs" />
     <Compile Include="Main.fs" />
+    <Compile Include="Highlight.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Feliz" Version="2.8.0" />
