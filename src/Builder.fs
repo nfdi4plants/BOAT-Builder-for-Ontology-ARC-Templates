@@ -5,9 +5,6 @@ open Feliz.Bulma
 open Browser.Dom
 open Types
 open Fable.SimpleJson
-open Fable.Core.JsInterop
-open ReactInterop
-
 
 
 module List =
@@ -73,11 +70,6 @@ type Builder =
         let setLocalStorageAnnotation (id: string)(nextAnnos: Annotation list) =
             let JSONString = Json.stringify nextAnnos 
             Browser.WebStorage.localStorage.setItem(id, JSONString)
-
-        let react = import React from "react";
-        let reactDom = import { createRoot } from "react-dom/client";
-        let highlight = import Highlighter from "react-highlight-words";
-        
 
 
         Html.div [
