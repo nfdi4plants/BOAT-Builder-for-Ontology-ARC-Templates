@@ -71,10 +71,9 @@ type Builder =
             let JSONString = Json.stringify nextAnnos 
             Browser.WebStorage.localStorage.setItem(id, JSONString)
 
-
         Html.div [
             Bulma.columns [
-                prop.className "pt-16 px-5"
+                prop.className "py-5 px-5 text-black"
                 prop.children [
                     Bulma.column [
                         column.isThreeFifths
@@ -84,7 +83,16 @@ type Builder =
                             ]
                             Bulma.block [
                                 prop.className "text-justify bg-slate-100 border-[#10242b] border-4 p-3"
-                                prop.text Helper.testText                                
+                                prop.children [
+                                    Highlighter.Highlighter.highlighter [
+                                        
+                                        Highlighter.Highlighter.textToHighlight Helper.testText
+                                        Highlighter.Highlighter.searchWords (ResizeArray[ "est" ]) //replace with array of annotated words
+                                        Highlighter.Highlighter.highlightClassName "highlight"
+                                        
+                                    ]
+                                ]
+
                             ] //exchange with uploaded string list, parsed from uploaded protocol 
                             Bulma.block [
                                 Bulma.button.button [
@@ -130,7 +138,10 @@ type Builder =
                     ]
                 ]
             ]
+            
         ]
+        
+        
         
         
         // <div class="notification is-danger">

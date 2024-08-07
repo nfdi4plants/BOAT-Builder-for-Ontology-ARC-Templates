@@ -14,3 +14,5 @@ type Highlighter =
     static member inline searchWords (target: ResizeArray<string>) = prop.custom ("searchWords" , target)
     static member inline textToHighlight (txt: string) = prop.custom ("textToHighlight" , txt)
     
+    static member inline autoEscape (bool: bool) = prop.custom ("autoEscape" , bool)
+    

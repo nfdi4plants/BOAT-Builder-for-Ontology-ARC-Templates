@@ -17,34 +17,43 @@ $primarye-invert: white;
 @forward "bulma/sass/themes";
 @use "bulma/sass/utilities/css-variables" as cv;
 
-html {
-    overflow:auto;
-    
-}
-
-body {
-    background-color: #A2B975;
-    width: 100vw;
-    height: 100vh; 	
-    color: black;
+html, body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    min-width: 400px;
+    height: 100%;
     overflow: auto;
     overflow-x: hidden;
+    background-color: #A2B975
 }
 
-.navbar {
-    background-color: #10242b;
-    position: fixed;
-    top: 0px;
-    z-index: 10;
-    width: 100%
-}
+// html {
+//     overflow:auto;
+// }
 
-.footer {
-    background-color: #10242b;
-    position: absolute;
-    color:white;
-    bottom: 0;
-    width: 100%;
-    z-index: 0;
-    height: 1rem !important;  
-}
+// body {
+//     background-color: #A2B975;
+//     width: 100vw;
+//     height: 100vh; 	
+//     color: black;
+//     overflow: auto;
+//     overflow-x: hidden;
+// }
+
+// .navbar {
+//     background-color: #10242b;
+//     position: fixed;
+//     top: 0px;
+//     z-index: 10;
+//     width: 100%
+// }
+
+// .footer {
+//     background-color: #10242b;
+//     position: absolute;
+//     color:white;
+//     bottom: 0;
+//     width: 100%;
+//     z-index: 0;
+//     height: 1rem !important;  
+// }
