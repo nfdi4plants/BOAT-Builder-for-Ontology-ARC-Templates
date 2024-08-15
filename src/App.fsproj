@@ -14,6 +14,7 @@
     <Compile Include="Contact.fs" />
     <Compile Include="View.fs" />
     <Compile Include="Main.fs" />
+    <Compile Include="Modal.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Feliz" Version="2.8.0" />
