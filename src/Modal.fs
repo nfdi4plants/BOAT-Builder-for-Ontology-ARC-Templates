@@ -16,7 +16,7 @@ type Modal =
     [<ReactComponent>]
     static member Main() =
 
-        let (modalState: DropdownModal, setModalActive) = 
+        let (modalState: DropdownModal, setModal) = 
             React.useState({
                 isActive = false; 
                 location = (0,0) 
@@ -25,7 +25,7 @@ type Modal =
          
         let myDropdownContext = {
             modalState = modalState
-            setter = setModalActive 
+            setter = setModal
             }
 
         let modalContext() = React.createContext(name="modal", defaultValue = myDropdownContext)
