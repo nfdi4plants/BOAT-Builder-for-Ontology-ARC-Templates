@@ -6,7 +6,6 @@ open Browser.Dom
 open Types
 open Fable.SimpleJson
 
-
 module List =
   let rec removeAt index list =
       match index, list with
@@ -23,6 +22,11 @@ Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie co
 type Builder =
     [<ReactComponent>]
     static member Main() =
+        
+        
+
+        let (modal:ModalInfo) = React.useContext(Contexts.ModalContextCreator.createModalContext)
+
         let isLocalStorageClear (key:string) () =
             match (Browser.WebStorage.localStorage.getItem key) with
             | null -> true // Local storage is clear if the item doesn't exist
@@ -106,7 +110,6 @@ type Builder =
                     ]
                 ]
             ]
-            
         ]
         
 

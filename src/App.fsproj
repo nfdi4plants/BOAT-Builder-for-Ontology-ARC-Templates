@@ -5,6 +5,7 @@
   <ItemGroup>
     <None Include="index.html" />
     <Compile Include="Types.fs" />
+    <Compile Include="Context.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="Highlight.fs" />
     <Compile Include="Builder.fs" />
@@ -12,9 +13,9 @@
     <Compile Include="Footer.fs" />
     <Compile Include="Help.fs" />
     <Compile Include="Contact.fs" />
+    <Compile Include="Modal.fs" />
     <Compile Include="View.fs" />
     <Compile Include="Main.fs" />
-    <Compile Include="Modal.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Feliz" Version="2.8.0" />
