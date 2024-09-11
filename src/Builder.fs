@@ -22,10 +22,8 @@ Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie co
 type Builder =
     [<ReactComponent>]
     static member Main() =
-        
-        
 
-        let (modal:ModalInfo) = React.useContext(Contexts.ModalContextCreator.createModalContext)
+        let (modal:DropdownModal) = React.useContext(Contexts.ModalContextCreator.createModalContext) //Main is able to use context
 
         let isLocalStorageClear (key:string) () =
             match (Browser.WebStorage.localStorage.getItem key) with

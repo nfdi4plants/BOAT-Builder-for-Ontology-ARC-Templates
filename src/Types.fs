@@ -8,14 +8,14 @@ type Annotation = {
     Key: string
 }
 
-type DropdownModal = {
+type ModalInfo = {
     isActive: bool
     location: int * int
 }
 
-type ModalInfo = {
-    modalState: DropdownModal
-    setter: DropdownModal -> unit 
+type DropdownModal = {
+    modalState: ModalInfo
+    setter: ModalInfo -> unit 
 }
 
 // type Annotations = {

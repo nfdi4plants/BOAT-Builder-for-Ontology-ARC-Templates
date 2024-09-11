@@ -5,6 +5,6 @@ open Types
 
 module ModalContextCreator =
 
-    let createModalContext:Fable.React.IContext<ModalInfo> = React.createContext(name="modal") //makes context
+    let createModalContext:Fable.React.IContext<DropdownModal> = React.createContext(name="modal") //makes context
 
 

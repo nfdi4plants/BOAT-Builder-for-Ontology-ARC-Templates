@@ -7,7 +7,7 @@ open Types
 type View =
     [<ReactComponent>]
     static member Main() =
-        let (modalState: DropdownModal, setModal) =
+        let (modalState: ModalInfo, setModal) =
             React.useState({
                 isActive = false;
                 location = (0,0)
@@ -20,7 +20,7 @@ type View =
 
         let currentpage,setpage = React.useState(Types.Page.Builder) //Reagiert beim clicken. Start state ist der Counter ->noch in Srat menü umändern
         printfn "%A" currentpage
-        React.contextProvider(Contexts.ModalContextCreator.createModalContext, myModalContext, React.fragment [
+        React.contextProvider(Contexts.ModalContextCreator.createModalContext, myModalContext, React.fragment [ //makes the context accesable for the whole project
             Html.div [
                 prop.id "mainView"
                 prop.className "flex h-full flex-col"
