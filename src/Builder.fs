@@ -29,8 +29,6 @@ type Builder =
     [<ReactComponent>]
     static member Main() =
 
-        let (modal:DropdownModal) = React.useContext(Contexts.ModalContextCreator.createModalContext) //Main is able to use context
-
         let isLocalStorageClear (key:string) () =
             match (Browser.WebStorage.localStorage.getItem key) with
             | null -> true // Local storage is clear if the item doesn't exist
@@ -47,6 +45,18 @@ type Builder =
             Browser.WebStorage.localStorage.setItem(id, JSONString)
 
         let annotationToResizeArray = AnnotationState |> List.map (fun i -> i.Key ) |> List.toArray |> ResizeArray
+
+        let addAnotation =
+            let term = window.getSelection().ToString().Trim()
+            if term.Length <> 0 then 
+                let newAnno = {Key = term}::AnnotationState
+                newAnno
+                |> fun t ->
+                t |> setAnnotationState 
+                t |> setLocalStorageAnnotation "Annotations"
+            else 
+                ()
+            Browser.Dom.window.getSelection().removeAllRanges()
 
         Html.div [
             Bulma.columns [
@@ -73,19 +83,11 @@ type Builder =
                                 Bulma.button.button [
                                     prop.text "Add selected"
                                     prop.onClick (fun e ->
-                                        let term = window.getSelection().ToString().Trim()
-                                        if term.Length <> 0 then 
-                                            let newAnno = {Key = term}::AnnotationState
-                                            newAnno
-                                            |> fun t ->
-                                            t |> setAnnotationState 
-                                            t |> setLocalStorageAnnotation "Annotations"
-                                        else 
-                                            ()
-                                        Browser.Dom.window.getSelection().removeAllRanges()
+                                        addAnotation
                                     )
                                 ]
                             ]
+                            Modal.Main()
                         ]
                     ]
                     Bulma.column [

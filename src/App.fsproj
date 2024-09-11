@@ -8,12 +8,12 @@
     <Compile Include="Context.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="Highlight.fs" />
+    <Compile Include="Modal.fs" />
     <Compile Include="Builder.fs" />
     <Compile Include="NavBar.fs" />
     <Compile Include="Footer.fs" />
     <Compile Include="Help.fs" />
     <Compile Include="Contact.fs" />
-    <Compile Include="Modal.fs" />
     <Compile Include="View.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
