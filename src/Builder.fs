@@ -27,6 +27,7 @@ Duis autem vel eum iriure"
 
 type Builder =
     [<ReactComponent>]
+
     static member Main() =
 
         let isLocalStorageClear (key:string) () =
@@ -85,6 +86,7 @@ type Builder =
                                     prop.onClick (fun e ->
                                         addAnotation
                                     )
+                                    
                                 ]
                             ]
                             Modal.Main()
