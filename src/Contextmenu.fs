@@ -6,28 +6,12 @@ open Types
 open Browser
 open Browser.Types
 
-// module private functions =
-
-    // let addAnotation =
-    //     let term = window.getSelection().ToString().Trim()
-    //     if term.Length <> 0 then 
-    //         let newAnno = {Key = term}::AnnotationState
-    //         newAnno
-    //         |> fun t ->
-    //         t |> setAnnotationState 
-    //         t |> setLocalStorageAnnotation "Annotations"
-    //     else 
-    //         ()
-    //     Browser.Dom.window.getSelection().removeAllRanges()
-
 module private Helper =
 
-    let isHeader (rowIndex: int) = rowIndex < 0
-
-    let rmv_element  = 
+    let rmv_element rmv= 
         Html.div [
-            // prop.onClick rmv
-            prop.onContextMenu(fun e -> e.preventDefault())
+            prop.onClick rmv
+            prop.onContextMenu(fun e -> e.preventDefault(); rmv e)
             prop.style [
                 style.position.fixedRelativeToWindow
                 style.backgroundColor.transparent
@@ -38,16 +22,18 @@ module private Helper =
                 style.display.block
             ]
         ]
-    let button (name:string) = 
+
+    let button (name:string, func, props) =
         Html.li [
             Bulma.button.button [
                 prop.style [style.borderRadius 0; style.justifyContent.spaceBetween; style.fontSize (length.rem 0.9)]
-                // prop.onClick func
+                prop.onClick func
                 prop.className "py-1"
                 Bulma.button.isFullWidth
+                //Bulma.button.isSmall
                 Bulma.color.isBlack
                 Bulma.button.isInverted
-                
+                yield! props
                 prop.children [
                     Html.span name
                 ]
@@ -59,42 +45,52 @@ module private Helper =
             Html.div [ prop.style [style.border(1, borderStyle.solid, "black"); style.margin(2,0); style.width (length.perc 75); style.marginLeft length.auto] ]
         ]
 
-    let contextmenu (mouseX: int, mouseY: int) = //add functions
-        /// This element will remove the contextmenu when clicking anywhere else
+open Helper
 
+module Contextmenu =
+    let private contextmenu (mousex: int, mousey: int) (func: MouseEvent -> unit) (rmv: _ -> unit) =
+        /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
             //button ("Edit Column", "fa-solid fa-table-columns", funcs.EditColumn rmv, [])
-            button ("Add Term")
-            button ("Add Annotation")
+            button ("Add Term", func, [])
+            button ("Add Annotation", func, [])
             divider
-            button ("Edit Term")
-            button ("Edit Annotation")
+            button ("Edit Term", func, [])
+            button ("Edit Annotation", func, [])
         ]
         Html.div [
             prop.style [
                 style.backgroundColor "white"
                 style.position.absolute
-                style.left mouseX
-                style.top (mouseY - 40)
+                style.left mousex
+                style.top (mousey - 40)
                 style.width 150
                 style.zIndex 40 // to overlap navbar
                 style.border(1, borderStyle.solid, "black")
             ]
             prop.children [
-                rmv_element
+                rmv_element rmv
                 Html.ul buttonList
             ]
         ]
+
+    let onContextMenu = 
+        fun (e: MouseEvent) ->
+            e.stopPropagation()
+            e.preventDefault()
+            let mousePosition = int e.pageX, int e.pageY
+            let func = (fun (e: MouseEvent) -> ())
+            let child = contextmenu mousePosition func
+            let name = $"context_{mousePosition}"
+            Modals.Controller.renderModal(name, child)
 
 type Modal = 
     [<ReactComponent>]
     static member Main() = 
         let (modal:DropdownModal) = React.useContext(Contexts.ModalContextCreator.createModalContext) //Main is able to use context
-
-        let mouseX (event: Browser.Types.MouseEvent)  = int event.pageX
-        let mouseY (event: Browser.Types.MouseEvent) = int event.pageY
          
-        Helper.contextmenu 
+        
+        
         // // Get mouse coordinates as int * int            
         // Html.div [
         //     Bulma.button.button [

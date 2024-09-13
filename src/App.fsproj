@@ -8,7 +8,8 @@
     <Compile Include="Context.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="Highlight.fs" />
-    <Compile Include="Modal.fs" />
+    <Compile Include="Controller.fs" />
+    <Compile Include="Contextmenu.fs" />
     <Compile Include="Builder.fs" />
     <Compile Include="NavBar.fs" />
     <Compile Include="Footer.fs" />

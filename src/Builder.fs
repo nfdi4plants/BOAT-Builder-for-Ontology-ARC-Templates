@@ -59,6 +59,8 @@ type Builder =
                 ()
             Browser.Dom.window.getSelection().removeAllRanges()
 
+        Modal.Main()
+
         Html.div [
             Bulma.columns [
                 prop.className "py-5 px-5 text-black"
@@ -89,7 +91,6 @@ type Builder =
                                     
                                 ]
                             ]
-                            Modal.Main()
                         ]
                     ]
                     Bulma.column [
