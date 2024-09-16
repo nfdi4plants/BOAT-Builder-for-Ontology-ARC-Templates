@@ -18,10 +18,6 @@ type DropdownModal = {
     setter: ModalInfo -> unit 
 }
 
-// type Annotations = {
-//     Annotation: Annotation list
-// }
-
 [<RequireQualifiedAccess>]
 
 type Page =

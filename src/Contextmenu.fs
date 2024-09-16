@@ -30,7 +30,6 @@ module private Helper =
                 prop.onClick func
                 prop.className "py-1"
                 Bulma.button.isFullWidth
-                //Bulma.button.isSmall
                 Bulma.color.isBlack
                 Bulma.button.isInverted
                 yield! props
@@ -84,10 +83,10 @@ module Contextmenu =
             let name = $"context_{mousePosition}"
             Modals.Controller.renderModal(name, child)
 
-type Modal = 
-    [<ReactComponent>]
-    static member Main() = 
-        let (modal:DropdownModal) = React.useContext(Contexts.ModalContextCreator.createModalContext) //Main is able to use context
+// type Modal = 
+//     [<ReactComponent>]
+//     static member Main() = 
+//         let (modal:DropdownModal) = React.useContext(Contexts.ModalContextCreator.createModalContext) //Main is able to use context
          
         
         
