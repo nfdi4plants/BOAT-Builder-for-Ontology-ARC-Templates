@@ -3,6 +3,7 @@ namespace Components
 open Feliz
 open Feliz.Bulma
 open Browser.Dom
+open Browser.Types
 open Types
 open Fable.SimpleJson
 
@@ -50,7 +51,7 @@ type Builder =
 
         let annotationToResizeArray = AnnotationState |> List.map (fun i -> i.Key ) |> List.toArray |> ResizeArray
 
-        let modalcontext = React.useContext (Contexts.ModalContext.createModalContext)
+        let modalContext = React.useContext (Contexts.ModalContext.createModalContext)
 
         Html.div [
             Bulma.columns [
@@ -63,7 +64,12 @@ type Builder =
                                 prop.text "ProtocolExample.docx" //exchange with uploaded file name
                             ]
                             Bulma.block [
-                                prop.onContextMenu Contextmenu.onContextMenu 
+                                prop.onContextMenu (fun e -> 
+                                    modalContext.setter {
+                                        isActive = true;
+                                        location = int e.pageX, int e.pageY
+                                    }
+                                )
                                 prop.className "text-justify bg-slate-100 border-[#10242b] border-4 p-3"
                                 prop.children [
                                     Highlighter.Highlighter.highlighter [
@@ -73,7 +79,8 @@ type Builder =
                                         Highlighter.Highlighter.autoEscape true
                                     ]
                                 ]
-                            ] //exchange with uploaded string list, parsed from uploaded protocol 
+                            ]
+                            //exchange with uploaded string list, parsed from uploaded protocol
                             Bulma.block [
                                 Bulma.button.button [
                                     prop.text "Add selected"

@@ -47,7 +47,7 @@ module private Helper =
 open Helper
 
 module Contextmenu =
-    let private contextmenu (mousex: int, mousey: int) (func: MouseEvent -> unit) (rmv: _ -> unit) =
+    let  contextmenu (mousex: int, mousey: int) (func: MouseEvent -> unit) (rmv: _ -> unit) =
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
             //button ("Edit Column", "fa-solid fa-table-columns", funcs.EditColumn rmv, [])
@@ -73,46 +73,19 @@ module Contextmenu =
             ]
         ]
 
-    let onContextMenu = 
+    let onContextMenu (modalContext:DropdownModal)= 
         fun (e: MouseEvent) ->
             e.stopPropagation()
             e.preventDefault()
-            let mousePosition = int e.pageX, int e.pageY
             let func = (fun (e: MouseEvent) -> ())
-            let child = contextmenu mousePosition func
-            let name = $"context_{mousePosition}"
-            Modals.Controller.renderModal(name, child)
+            contextmenu modalContext.modalState.location func
+            
+            
 
-// type Modal = 
-//     [<ReactComponent>]
-//     static member Main() = 
-//         let (modal:DropdownModal) = React.useContext(Contexts.ModalContextCreator.createModalContext) //Main is able to use context
-         
-        
-        
-        // // Get mouse coordinates as int * int            
-        // Html.div [
-        //     Bulma.button.button [
-        //         prop.ariaHasPopup true
-        //         prop.target "modal-sample"
-        //         prop.text "Create Modal"
-        //         prop.onClick (fun e -> modal.setter({
-        //             isActive = true;
-        //             location = mouseLocation e
-        //         }))
-        //     ]
-        //     Bulma.modal [
-        //         prop.id "modal-sample"
-        //         if modal.modalState.isActive then Bulma.modal.isActive
-        //         prop.children [
-        //             Bulma.modalContent [
-        //                 Bulma.box [
-        //                     Html.h1 "Yey!"
-        //                 ]
-        //             ]
-        //         ]
-        //     ]
-        // ]
+            
+            
+
+
 
         
 

@@ -3,23 +3,28 @@ namespace App
 open Feliz
 open Feliz.Bulma
 open Types
+open Components
 
 type View =
     [<ReactComponent>]
     static member Main() =
         let (modalState: ModalInfo, setModal) =
-            React.useState({
-                isActive = false;
-                location = (0,0)
-                }
+            React.useState(
+
+                
             )
             
         let myModalContext = { //makes setter and state in one record type
             modalState = modalState
             setter = setModal
             }
+            
+        match modalState.isActive with
+        |true -> yield Contextmenu.onContextMenu
+        |false -> _
 
-        let currentpage,setpage = React.useState(Types.Page.Builder) //Reagiert beim clicken. Start state ist der Counter ->noch in Srat menü umändern
+
+        let currentpage,setpage = React.useState(Types.Page.Builder) 
         printfn "%A" currentpage
         React.contextProvider(Contexts.ModalContext.createModalContext, myModalContext, React.fragment [ //makes the context accesable for the whole project
             Html.div [
@@ -38,7 +43,7 @@ type View =
                         ]
                     ]
                     Components.Footer.Main
-                //wird gemachted da die jeweilige component aufgerufen werden soll je nach page (application state)
+
                 ]
             ]
         ])
