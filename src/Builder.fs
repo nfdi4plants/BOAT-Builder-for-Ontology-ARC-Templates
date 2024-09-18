@@ -31,6 +31,8 @@ module Helper =
         necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a 
         sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
 
+    let border = prop.className "text-justify bg-slate-100 border-[#183641] border-4 p-3 text-black" 
+
 type Builder =
     [<ReactComponent>]
     static member Main() =
@@ -55,7 +57,8 @@ type Builder =
 
         Html.div [
             Bulma.columns [
-                prop.className "py-5 px-5 text-black"
+                prop.className "py-5 px-5 text-white"
+                prop.onClick (fun e -> modalContext.setter Contextmenu.initialModal)
                 prop.children [
                     Bulma.column [
                         column.isThreeFifths
@@ -69,8 +72,11 @@ type Builder =
                                         isActive = true;
                                         location = int e.pageX, int e.pageY
                                     }
+                                    e.stopPropagation()
+                                    e.preventDefault()
                                 )
-                                prop.className "text-justify bg-slate-100 border-[#10242b] border-4 p-3"
+                                
+                                Helper.border
                                 prop.children [
                                     Highlighter.Highlighter.highlighter [
                                         Highlighter.Highlighter.textToHighlight (Helper.testText.Replace("  ","" ))
@@ -104,10 +110,11 @@ type Builder =
                         prop.children [
                             Bulma.block [
                                 prop.text "Annotations" //exchange with uploaded file name
+                                prop.className "text-white"
                             ]
                             for a in 0 .. (AnnotationState.Length - 1)  do
                                 Bulma.block [
-                                    prop.className "text-justify bg-[#ECBBC3] border-[#10242b] border-4 p-3"
+                                    prop.className "text-justify bg-[#E6A5B0] border-[#183641] border-4 p-3 text-black"
                                     prop.children [
                                         Html.button [
                                             prop.className "delete float-right m-0.5"

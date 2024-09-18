@@ -8,23 +8,22 @@ open Components
 type View =
     [<ReactComponent>]
     static member Main() =
-        let (modalState: ModalInfo, setModal) =
-            React.useState(
 
-                
-            )
-            
+        let (modalState: ModalInfo, setModal) =
+            React.useState(Contextmenu.initialModal)               
+                       
         let myModalContext = { //makes setter and state in one record type
             modalState = modalState
             setter = setModal
             }
-            
-        match modalState.isActive with
-        |true -> yield Contextmenu.onContextMenu
-        |false -> _
 
-
+        let modalactivator = 
+            match modalState.isActive with
+                |true -> Contextmenu.onContextMenu (myModalContext)
+                |false -> Html.none
+        
         let currentpage,setpage = React.useState(Types.Page.Builder) 
+
         printfn "%A" currentpage
         React.contextProvider(Contexts.ModalContext.createModalContext, myModalContext, React.fragment [ //makes the context accesable for the whole project
             Html.div [
@@ -40,10 +39,11 @@ type View =
                             |Types.Page.Builder -> Components.Builder.Main()
                             |Types.Page.Contact -> Components.Contact.Main()
                             |Types.Page.Help -> Components.Help.Main()
+
+                            modalactivator
                         ]
                     ]
                     Components.Footer.Main
-
                 ]
             ]
         ])
