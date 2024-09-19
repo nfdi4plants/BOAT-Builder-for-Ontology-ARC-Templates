@@ -31,7 +31,7 @@ module Helper =
         necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a 
         sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
 
-    let border = prop.className "text-justify bg-slate-100 border-[#183641] border-4 p-3 text-black" 
+    let border = prop.className "text-justify bg-slate-100 p-3 text-black" 
 
 type Builder =
     [<ReactComponent>]
@@ -75,8 +75,7 @@ type Builder =
                                     e.stopPropagation()
                                     e.preventDefault()
                                 )
-                                
-                                Helper.border
+                                prop.className "text-justify bg-slate-100 p-3 text-black"
                                 prop.children [
                                     Highlighter.Highlighter.highlighter [
                                         Highlighter.Highlighter.textToHighlight (Helper.testText.Replace("  ","" ))
@@ -114,7 +113,7 @@ type Builder =
                             ]
                             for a in 0 .. (AnnotationState.Length - 1)  do
                                 Bulma.block [
-                                    prop.className "text-justify bg-[#E6A5B0] border-[#183641] border-4 p-3 text-black"
+                                    prop.className "text-justify bg-[#E6A5B0] p-3 text-black"
                                     prop.children [
                                         Html.button [
                                             prop.className "delete float-right m-0.5"
