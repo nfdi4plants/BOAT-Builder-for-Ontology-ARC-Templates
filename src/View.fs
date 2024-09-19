@@ -39,7 +39,6 @@ type View =
                             |Types.Page.Builder -> Components.Builder.Main()
                             |Types.Page.Contact -> Components.Contact.Main()
                             |Types.Page.Help -> Components.Help.Main()
-
                             modalactivator
                         ]
                     ]

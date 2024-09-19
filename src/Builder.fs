@@ -31,7 +31,6 @@ module Helper =
         necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a 
         sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
 
-    let border = prop.className "text-justify bg-slate-100 p-3 text-black" 
 
 type Builder =
     [<ReactComponent>]
@@ -67,15 +66,20 @@ type Builder =
                                 prop.text "ProtocolExample.docx" //exchange with uploaded file name
                             ]
                             Bulma.block [
-                                prop.onContextMenu (fun e -> 
-                                    modalContext.setter {
-                                        isActive = true;
-                                        location = int e.pageX, int e.pageY
-                                    }
+                                prop.onContextMenu (fun e ->
+                                    let term = window.getSelection().ToString().Trim() 
+                                    if term.Length <> 0 then 
+                                        modalContext.setter {
+                                            isActive = true;
+                                            location = int e.pageX, int e.pageY
+                                        }
+
+                                    else 
+                                        ()
                                     e.stopPropagation()
                                     e.preventDefault()
                                 )
-                                prop.className "text-justify bg-slate-100 p-3 text-black"
+                                prop.className "border border-slate-400 text-justify bg-slate-100 p-3 text-black"
                                 prop.children [
                                     Highlighter.Highlighter.highlighter [
                                         Highlighter.Highlighter.textToHighlight (Helper.testText.Replace("  ","" ))
@@ -106,33 +110,29 @@ type Builder =
                         ]
                     ]
                     Bulma.column [
-                        prop.children [
-                            Bulma.block [
-                                prop.text "Annotations" //exchange with uploaded file name
-                                prop.className "text-white"
-                            ]
-                            for a in 0 .. (AnnotationState.Length - 1)  do
-                                Bulma.block [
-                                    prop.className "text-justify bg-[#E6A5B0] p-3 text-black"
-                                    prop.children [
-                                        Html.button [
-                                            prop.className "delete float-right m-0.5"
-                                            prop.onClick (fun _ -> 
-                                            let newAnno = List.removeAt a AnnotationState 
-                                            newAnno
-                                            |> fun t ->
-                                            t |> setAnnotationState 
-                                            t |> setLocalStorageAnnotation "Annotations"
-                                            )
-                                        ]
-                                        Html.text ( AnnotationState.[a].Key)
-                                    ]
-                                ]
+                        Bulma.block [
+                            prop.text "Annotations"
                         ]
+                        for a in 0 .. (AnnotationState.Length - 1)  do
+                            Bulma.block [
+                                prop.className "border border-slate-400 text-justify bg-[#E6A5B0] p-3 text-black "
+                                prop.children [
+                                    Html.button [
+                                        prop.className "delete float-right m-0.5"
+                                        prop.onClick (fun _ -> 
+                                        let newAnno = List.removeAt a AnnotationState 
+                                        newAnno
+                                        |> fun t ->
+                                        t |> setAnnotationState 
+                                        t |> setLocalStorageAnnotation "Annotations"
+                                        )
+                                    ]
+                                    Html.text ( AnnotationState.[a].Key)
+                                ]
+                            ]
                     ]
                 ]
             ]
-            
         ]
         
         
