@@ -31,23 +31,25 @@ module private Helper =
             prop.style 
                 [style.margin(2,0); style.width (length.perc 75); style.margin length.auto] 
             preventDefault
-        ]
-        
+        ]        
 
 open Helper
 
 module Contextmenu =
     let private contextmenu (mousex: int, mousey: int) (resetter: MouseEvent-> unit) =
         /// This element will remove the contextmenu when clicking anywhere else
-        /// 
+
         let buttonList = [
             button ("Add Annotation", resetter, [])
-            button ("Add Ontology", resetter, [])
+            button ("Add Ontology", resetter, []) 
             divider
             button ("Edit Annotation", resetter, [])
             button ("Edit Ontology", resetter, [])
         ]
         Html.div [
+            // Browser.Dom.window.addEventListener()
+            prop.tabIndex 0
+            
             preventDefault
             prop.className "border-slate-400 border-solid border"
             prop.style [

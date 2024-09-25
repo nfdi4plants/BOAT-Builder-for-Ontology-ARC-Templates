@@ -6,6 +6,8 @@ open Browser.Dom
 open Browser.Types
 open Types
 open Fable.SimpleJson
+open Fable.Core.JS
+open System
 
 module List =
   let rec removeAt index list =
@@ -31,7 +33,6 @@ module Helper =
         necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a 
         sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
 
-
 type Builder =
     [<ReactComponent>]
     static member Main() =
@@ -52,8 +53,21 @@ type Builder =
 
         let annotationToResizeArray = AnnotationState |> List.map (fun i -> i.Key ) |> List.toArray |> ResizeArray
 
+        let initialModal = {
+            isActive = false
+            location = (0,0)
+        }
+
         let modalContext = React.useContext (Contexts.ModalContext.createModalContext)
 
+        let turnOffContext (event: Browser.Types.Event) = 
+            modalContext.setter initialModal 
+            
+        React.useEffectOnce(fun () ->
+            Browser.Dom.window.addEventListener ("resize", turnOffContext)
+            {new IDisposable with member this.Dispose() = window.removeEventListener ("resize", turnOffContext) }    
+        )
+ 
         Html.div [
             Bulma.columns [
                 prop.className "py-5 px-5 text-white"
@@ -73,7 +87,6 @@ type Builder =
                                             isActive = true;
                                             location = int e.pageX, int e.pageY
                                         }
-
                                     else 
                                         ()
                                     e.stopPropagation()
