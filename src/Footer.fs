@@ -7,7 +7,7 @@ open Feliz.Bulma
 type Footer =
     static member Main =
         Bulma.footer [
-            prop.className "content has-text-centered h-16"
+            prop.className "content has-text-centered h-16 select-none"
             prop.children [
                 Html.div [
                     prop.className "inline-flex"

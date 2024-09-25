@@ -38,7 +38,6 @@ open Helper
 module Contextmenu =
     let private contextmenu (mousex: int, mousey: int) (resetter: MouseEvent-> unit) =
         /// This element will remove the contextmenu when clicking anywhere else
-
         let buttonList = [
             button ("Add Annotation", resetter, [])
             button ("Add Ontology", resetter, []) 
@@ -47,7 +46,6 @@ module Contextmenu =
             button ("Edit Ontology", resetter, [])
         ]
         Html.div [
-            // Browser.Dom.window.addEventListener()
             prop.tabIndex 0
             
             preventDefault
@@ -59,7 +57,6 @@ module Contextmenu =
                 style.top mousey
                 style.width 150
                 style.zIndex 40
-                // style.border(1, borderStyle.solid)
             ]
             prop.children [
                 Html.ul buttonList

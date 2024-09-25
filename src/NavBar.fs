@@ -9,6 +9,7 @@ type NavBar =
         let logo = StaticFile.import "./img/DataPLANT_logo_bg_transparent.svg"
         Bulma.navbar [
             navbar.isFixedTop
+            prop.className "select-none"
             prop.children [
                 Bulma.navbarBrand.div [
                     Bulma.navbarItem.a [

@@ -63,6 +63,7 @@ type Builder =
         let turnOffContext (event: Browser.Types.Event) = 
             modalContext.setter initialModal 
             
+
         React.useEffectOnce(fun () ->
             Browser.Dom.window.addEventListener ("resize", turnOffContext)
             {new IDisposable with member this.Dispose() = window.removeEventListener ("resize", turnOffContext) }    
@@ -78,6 +79,7 @@ type Builder =
                         prop.children [
                             Bulma.block [
                                 prop.text "ProtocolExample.docx" //exchange with uploaded file name
+                                prop.className "select-none"
                             ]
                             Bulma.block [
                                 prop.onContextMenu (fun e ->
@@ -123,26 +125,29 @@ type Builder =
                         ]
                     ]
                     Bulma.column [
-                        Bulma.block [
-                            prop.text "Annotations"
-                        ]
-                        for a in 0 .. (AnnotationState.Length - 1)  do
+                        prop.className "select-none"
+                        prop.children [
                             Bulma.block [
-                                prop.className "border border-slate-400 text-justify bg-[#E6A5B0] p-3 text-black "
-                                prop.children [
-                                    Html.button [
-                                        prop.className "delete float-right m-0.5"
-                                        prop.onClick (fun _ -> 
-                                        let newAnno = List.removeAt a AnnotationState 
-                                        newAnno
-                                        |> fun t ->
-                                        t |> setAnnotationState 
-                                        t |> setLocalStorageAnnotation "Annotations"
-                                        )
-                                    ]
-                                    Html.text ( AnnotationState.[a].Key)
-                                ]
+                                prop.text "Annotations"
                             ]
+                            for a in 0 .. (AnnotationState.Length - 1)  do
+                                Bulma.block [
+                                    prop.className "border border-slate-400 text-justify bg-[#E6A5B0] p-3 text-black "
+                                    prop.children [
+                                        Html.button [
+                                            prop.className "delete float-right m-0.5"
+                                            prop.onClick (fun _ -> 
+                                            let newAnno = List.removeAt a AnnotationState 
+                                            newAnno
+                                            |> fun t ->
+                                            t |> setAnnotationState 
+                                            t |> setLocalStorageAnnotation "Annotations"
+                                            )
+                                        ]
+                                        Html.text ( AnnotationState.[a].Key)
+                                    ]
+                                ]
+                        ]
                     ]
                 ]
             ]
