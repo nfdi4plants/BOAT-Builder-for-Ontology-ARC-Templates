@@ -35,6 +35,7 @@ module Helper =
 
 type Builder =
     [<ReactComponent>]
+
     static member Main() =
         let isLocalStorageClear (key:string) () =
             match (Browser.WebStorage.localStorage.getItem key) with
@@ -63,16 +64,17 @@ type Builder =
         let turnOffContext (event: Browser.Types.Event) = 
             modalContext.setter initialModal 
             
-
         React.useEffectOnce(fun () ->
             Browser.Dom.window.addEventListener ("resize", turnOffContext)
             {new IDisposable with member this.Dispose() = window.removeEventListener ("resize", turnOffContext) }    
         )
+        
+        {|State = AnnotationState; Setter = setAnnotationState; LocalSetter =setLocalStorageAnnotation|}
  
         Html.div [
             Bulma.columns [
                 prop.className "py-5 px-5 text-white"
-                prop.onClick (fun e -> modalContext.setter Contextmenu.initialModal)
+                prop.onClick (fun e -> modalContext.setter initialModal)
                 prop.children [
                     Bulma.column [
                         column.isThreeFifths

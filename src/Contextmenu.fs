@@ -14,10 +14,11 @@ module private Helper =
             e.preventDefault()
         ) 
 
-    let button (name:string, resetter: MouseEvent -> unit, props) =
+    let button (name:string, resetter: MouseEvent -> unit, func: MouseEvent -> unit, props) =
         Html.li [
             Html.div [
                 prop.className "hover:bg-[#a7d9ec] justify-between text-sm text-black select-none p-2"
+                prop.onClick func
                 prop.onClick resetter
                 preventDefault
                 yield! props
@@ -33,21 +34,41 @@ module private Helper =
             preventDefault
         ]        
 
+module private Functions =
+    let addAnnotation =
+        (fun (e:MouseEvent) ->
+            let term = window.getSelection().ToString().Trim()
+            if term.Length <> 0 then 
+                let newAnno = ({Key = term}::Builder.Main().State)
+                newAnno
+                |> fun t ->
+
+                t |> Builder.Main().Setter 
+                t |> Builder.Main().LocalSetter "Annotations"
+            else 
+                ()
+            Browser.Dom.window.getSelection().removeAllRanges()
+        )
+
+    let propPlaceHolder = fun e -> () //replace with other functions
+
 open Helper
 
+open Functions
+
 module Contextmenu =
+        
     let private contextmenu (mousex: int, mousey: int) (resetter: MouseEvent-> unit) =
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
-            button ("Add Annotation", resetter, [])
-            button ("Add Ontology", resetter, []) 
+            button ("Add Annotation", resetter, addAnnotation, [])
+            button ("Add Ontology", propPlaceHolder, resetter, []) 
             divider
-            button ("Edit Annotation", resetter, [])
-            button ("Edit Ontology", resetter, [])
+            button ("Edit Annotation", propPlaceHolder, resetter, [])
+            button ("Edit Ontology", propPlaceHolder, resetter, [])
         ]
         Html.div [
             prop.tabIndex 0
-            
             preventDefault
             prop.className "border-slate-400 border-solid border"
             prop.style [
@@ -68,8 +89,8 @@ module Contextmenu =
                 location = (0,0)
             }
 
-    let onContextMenu (modalContext:DropdownModal)= 
-        let resetter = (fun (e:MouseEvent) -> modalContext.setter initialModal) //add actual function
+    let onContextMenu (modalContext:DropdownModal) = 
+        let resetter = fun (e:MouseEvent) -> modalContext.setter initialModal //add actual function
         // let rmv = modalContext.setter initialModal 
         contextmenu modalContext.modalState.location resetter
 
