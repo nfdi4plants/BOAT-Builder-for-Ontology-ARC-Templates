@@ -35,24 +35,9 @@ module Helper =
 
 type Builder =
     [<ReactComponent>]
+    static member Main (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) =
 
-    static member Main() =
-        let isLocalStorageClear (key:string) () =
-            match (Browser.WebStorage.localStorage.getItem key) with
-            | null -> true // Local storage is clear if the item doesn't exist
-            | _ -> false //if false then something exists and the else case gets started
-
-        let initialInteraction (id: string) =
-            if isLocalStorageClear id () = true then []
-            else Json.parseAs<Annotation list> (Browser.WebStorage.localStorage.getItem id)  
-
-        let (AnnotationState: Annotation list, setAnnotationState) = React.useState (initialInteraction "Annotations")
-
-        let setLocalStorageAnnotation (id: string)(nextAnnos: Annotation list) =
-            let JSONString = Json.stringify nextAnnos 
-            Browser.WebStorage.localStorage.setItem(id, JSONString)
-
-        let annotationToResizeArray = AnnotationState |> List.map (fun i -> i.Key ) |> List.toArray |> ResizeArray
+        let annotationToResizeArray = state |> List.map (fun i -> i.Key ) |> List.toArray |> ResizeArray
 
         let initialModal = {
             isActive = false
@@ -68,8 +53,6 @@ type Builder =
             Browser.Dom.window.addEventListener ("resize", turnOffContext)
             {new IDisposable with member this.Dispose() = window.removeEventListener ("resize", turnOffContext) }    
         )
-        
-        {|State = AnnotationState; Setter = setAnnotationState; LocalSetter =setLocalStorageAnnotation|}
  
         Html.div [
             Bulma.columns [
@@ -113,11 +96,11 @@ type Builder =
                                     prop.onClick (fun e ->
                                         let term = window.getSelection().ToString().Trim()
                                         if term.Length <> 0 then 
-                                            let newAnno = {Key = term}::AnnotationState
+                                            let newAnno = {Key = term}::state
                                             newAnno
                                             |> fun t ->
-                                            t |> setAnnotationState 
-                                            t |> setLocalStorageAnnotation "Annotations"
+                                            t |> setState 
+                                            t |> setLocal "Annotations"
                                         else 
                                             ()
                                         Browser.Dom.window.getSelection().removeAllRanges()
@@ -132,21 +115,21 @@ type Builder =
                             Bulma.block [
                                 prop.text "Annotations"
                             ]
-                            for a in 0 .. (AnnotationState.Length - 1)  do
+                            for a in 0 .. (state.Length - 1)  do
                                 Bulma.block [
                                     prop.className "border border-slate-400 text-justify bg-[#E6A5B0] p-3 text-black "
                                     prop.children [
                                         Html.button [
                                             prop.className "delete float-right m-0.5"
                                             prop.onClick (fun _ -> 
-                                            let newAnno = List.removeAt a AnnotationState 
+                                            let newAnno = List.removeAt a state 
                                             newAnno
                                             |> fun t ->
-                                            t |> setAnnotationState 
-                                            t |> setLocalStorageAnnotation "Annotations"
+                                            t |> setState 
+                                            t |> setLocal "Annotations"
                                             )
                                         ]
-                                        Html.text ( AnnotationState.[a].Key)
+                                        Html.text (state.[a].Key)
                                     ]
                                 ]
                         ]

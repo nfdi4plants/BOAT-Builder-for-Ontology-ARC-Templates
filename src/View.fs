@@ -1,13 +1,28 @@
 namespace App
 
 open Feliz
-open Feliz.Bulma
 open Types
 open Components
+open Fable.SimpleJson
 
 type View =
     [<ReactComponent>]
     static member Main() =
+
+        let isLocalStorageClear (key:string) () =
+            match (Browser.WebStorage.localStorage.getItem key) with
+            | null -> true // Local storage is clear if the item doesn't exist
+            | _ -> false //if false then something exists and the else case gets started
+
+        let initialInteraction (id: string) =
+            if isLocalStorageClear id () = true then []
+            else Json.parseAs<Annotation list> (Browser.WebStorage.localStorage.getItem id)  
+
+        let (AnnotationState: Annotation list, setAnnotationState) = React.useState (initialInteraction "Annotations")
+
+        let setLocalStorageAnnotation (id: string)(nextAnnos: Annotation list) =
+            let JSONString = Json.stringify nextAnnos 
+            Browser.WebStorage.localStorage.setItem(id, JSONString)
 
         let (modalState: ModalInfo, setModal) =
             React.useState(Contextmenu.initialModal)               
@@ -19,7 +34,7 @@ type View =
 
         let modalactivator = 
             match modalState.isActive with
-                |true -> Contextmenu.onContextMenu (myModalContext)
+                |true -> Contextmenu.onContextMenu (myModalContext, AnnotationState, setAnnotationState, setLocalStorageAnnotation)
                 |false -> Html.none
         
         let currentpage,setpage = React.useState(Types.Page.Builder) 
@@ -36,7 +51,7 @@ type View =
                         prop.className "grow"
                         prop.children [
                             match currentpage with
-                            |Types.Page.Builder -> Components.Builder.Main()
+                            |Types.Page.Builder -> Components.Builder.Main( AnnotationState, setAnnotationState, setLocalStorageAnnotation )
                             |Types.Page.Contact -> Components.Contact.Main()
                             |Types.Page.Help -> Components.Help.Main()
                             modalactivator
