@@ -14,12 +14,18 @@ module private Helper =
             e.preventDefault()
         ) 
 
-    let button (name:string, resetter: MouseEvent -> unit, func: MouseEvent -> unit, props) =
+    let button (name:string, resetter: unit -> unit, func: unit -> unit, props) =
         Html.li [
             Html.div [
                 prop.className "hover:bg-[#a7d9ec] justify-between text-sm text-black select-none p-2"
-                prop.onClick func
+                prop.onMouseDown (fun e -> 
+                    console.log "clicked"
+                    func()
+                    resetter()
+                    ()
+                )   
                 preventDefault
+                prop.onBlur (fun _ -> resetter() )
                 yield! props
                 prop.text name
             ]
@@ -35,21 +41,19 @@ module private Helper =
 
 module private Functions =
     let addAnnotation (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) =
-        (fun (e:MouseEvent) ->
+        fun () ->
             let term = window.getSelection().ToString().Trim()
             if term.Length <> 0 then 
-                let newAnno = (state)
+                let newAnno = {Key = term}::state
                 newAnno
                 |> fun t ->
-
                 t |> setState
                 t |> setLocal "Annotations"
             else 
                 ()
-            Browser.Dom.window.getSelection().removeAllRanges()
-        )
+            Browser.Dom.window.getSelection().removeAllRanges()               
 
-    let propPlaceHolder = fun e -> () //replace with other functions
+    let propPlaceHolder = fun e ->  () //replace with other functions
 
 open Helper
 
@@ -57,14 +61,14 @@ open Functions
 
 module Contextmenu =
         
-    let private contextmenu (mousex: int, mousey: int) (resetter: MouseEvent-> unit, state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit)=
+    let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit)=
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
             button ("Add Annotation", resetter, addAnnotation(state, setState, setLocal), [])
-            button ("Add Ontology", propPlaceHolder, resetter, []) 
+            button ("Add Ontology", resetter, propPlaceHolder , []) 
             divider
-            button ("Edit Annotation", propPlaceHolder, resetter, [])
-            button ("Edit Ontology", propPlaceHolder, resetter, [])
+            button ("Edit Annotation", resetter, propPlaceHolder,  [])
+            button ("Edit Ontology", resetter, propPlaceHolder,  [])
         ]
         Html.div [
             prop.tabIndex 0
@@ -89,7 +93,7 @@ module Contextmenu =
             }
 
     let onContextMenu (modalContext:DropdownModal, state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) = 
-        let resetter = fun (e:MouseEvent) -> modalContext.setter initialModal //add actual function
+        let resetter = fun () -> modalContext.setter initialModal //add actual function
         // let rmv = modalContext.setter initialModal 
         contextmenu (modalContext.modalState.location) (resetter, state, setState, setLocal)
 

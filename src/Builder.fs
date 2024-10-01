@@ -90,23 +90,6 @@ type Builder =
                                 ]
                             ]
                             //exchange with uploaded string list, parsed from uploaded protocol
-                            Bulma.block [
-                                Bulma.button.button [
-                                    prop.text "Add selected"
-                                    prop.onClick (fun e ->
-                                        let term = window.getSelection().ToString().Trim()
-                                        if term.Length <> 0 then 
-                                            let newAnno = {Key = term}::state
-                                            newAnno
-                                            |> fun t ->
-                                            t |> setState 
-                                            t |> setLocal "Annotations"
-                                        else 
-                                            ()
-                                        Browser.Dom.window.getSelection().removeAllRanges()
-                                    )
-                                ]
-                            ]
                         ]
                     ]
                     Bulma.column [
