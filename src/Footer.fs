@@ -17,7 +17,7 @@ type Footer =
                             prop.className "pr-1" 
                         ]
                         Html.a [
-                            prop.text "ndfdi4plants"
+                            prop.text "ndfdi4plantsss"
                             prop.href "https://www.nfdi4plants.de/"
                             prop.target.blank 
                             prop.className "underline text-blue-400"
