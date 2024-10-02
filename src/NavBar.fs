@@ -49,6 +49,9 @@ type NavBar =
                             prop.text "Contact"
                             prop.className "hover:bg-[#3f8fae]"
                             prop.onClick (fun _ -> setPage(Types.Page.Contact)) 
+                            // prop.children [
+                            //     Html.i [prop.className "fa-brands fa-github"; prop.style [style.fontSize (length.rem 3)]]
+                            // ]
                         ]
                         Bulma.navbarItem.a [
                         prop.href "https://github.com/nfdi4plants/BOAT-Builder-for-Ontology-ARC-Templates"

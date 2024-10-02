@@ -6,7 +6,7 @@
     "clean": "dotnet fable clean src --yes"
   },
   "dependencies": {
-    "bulma": "^1.0.1",
+    "bulma": "^1.0.2",
     "memoize-one": "^6.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

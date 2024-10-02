@@ -3,7 +3,6 @@ namespace Components
 open Feliz
 open Feliz.Bulma
 
-
 type Footer =
     static member Main =
         Bulma.footer [
