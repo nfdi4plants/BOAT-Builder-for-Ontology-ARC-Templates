@@ -16,7 +16,6 @@ $primarye-invert: white;
 @use "bulma/sass" with ( $primary: $nfdi-blue-dark, $success: $nfdi-mint, $info: $nfdi-blue-light, $danger: $nfdi-red, $warning: $nfdi-yellow, $custom-colors: ( "primarye":($primarye, $primarye-invert)), );
 @forward "bulma/sass/themes";
 @use "bulma/sass/utilities/css-variables" as cv;
-@import "node_modules/bulma/bulma";
 
 html, body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;

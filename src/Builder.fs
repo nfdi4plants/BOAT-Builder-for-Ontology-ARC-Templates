@@ -89,6 +89,9 @@ type Builder =
                                     ]
                                 ]
                             ]
+                            Bulma.block [
+                                Bulma.button.button [prop.text "test"]
+                            ]
                             //exchange with uploaded string list, parsed from uploaded protocol
                         ]
                     ]
