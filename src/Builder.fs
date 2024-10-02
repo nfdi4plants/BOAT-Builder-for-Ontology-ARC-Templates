@@ -89,9 +89,6 @@ type Builder =
                                     ]
                                 ]
                             ]
-                            Bulma.block [
-                                Bulma.button.button [prop.text "test"]
-                            ]
                             //exchange with uploaded string list, parsed from uploaded protocol
                         ]
                     ]
@@ -116,7 +113,26 @@ type Builder =
                                             )
                                         ]
                                         Html.text (state.[a].Key)
+                                        Bulma.columns [
+                                            column.isHalf
+                                            prop.children [
+                                                Bulma.column [
+                                                    Bulma.button.button [
+                                                        button.isFullWidth
+                                                        prop.text "Edit"
+                                                    ]
+                                                ]
+                                                Bulma.column [
+                                                    Bulma.button.button [
+                                                        button.isFullWidth
+                                                        prop.text "ontologize"
+                                                    ]
+                                                ] 
+                                            ]
+                                            
+                                        ]
                                     ]
+
                                 ]
                         ]
                     ]
