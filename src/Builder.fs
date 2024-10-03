@@ -16,7 +16,7 @@ module List =
       | 0, _ :: tail -> tail
       | _, head :: tail -> head :: removeAt (index - 1) tail
 
-module Helper =
+module HelperBui =
 
     let testText = "Seduse ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, 
         totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
@@ -82,7 +82,7 @@ type Builder =
                                 prop.className "border border-slate-400 text-justify bg-slate-100 p-3 text-black"
                                 prop.children [
                                     Highlighter.Highlighter.highlighter [
-                                        Highlighter.Highlighter.textToHighlight (Helper.testText.Replace("  ","" ))
+                                        Highlighter.Highlighter.textToHighlight (HelperBui.testText.Replace("  ","" ))
                                         Highlighter.Highlighter.searchWords (annotationToResizeArray) //replace with array of annotated words
                                         // Highlighter.Highlighter.highlightClassName "highlight"
                                         Highlighter.Highlighter.autoEscape true
@@ -100,7 +100,7 @@ type Builder =
                             ]
                             for a in 0 .. (state.Length - 1)  do
                                 Bulma.block [
-                                    prop.className "border border-slate-400 text-justify bg-[#E6A5B0] p-3 text-black "
+                                    prop.className "border border-slate-400 bg-[#E6A5B0] p-3 text-black w-96"
                                     prop.children [
                                         Html.button [
                                             prop.className "delete float-right m-0.5"
@@ -114,25 +114,23 @@ type Builder =
                                         ]
                                         Html.text (state.[a].Key)
                                         Bulma.columns [
+                                            prop.className "py-4"
                                             column.isHalf
                                             prop.children [
-                                                Bulma.column [
-                                                    Bulma.button.button [
-                                                        button.isFullWidth
-                                                        prop.text "Edit"
-                                                    ]
+                                                Bulma.button.button [
+                                                    Bulma.button.isSmall
+                                                    prop.text "edit"
+                                                    prop.className "is-info"
                                                 ]
-                                                Bulma.column [
-                                                    Bulma.button.button [
-                                                        button.isFullWidth
-                                                        prop.text "ontologize"
-                                                    ]
-                                                ] 
+                                                Bulma.button.button [
+                                                    Bulma.button.isSmall
+                                                    prop.text "ontologize"
+                                                    prop.className "is-info mx-3"
+                                                ]
+                                                
                                             ]
-                                            
                                         ]
                                     ]
-
                                 ]
                         ]
                     ]
