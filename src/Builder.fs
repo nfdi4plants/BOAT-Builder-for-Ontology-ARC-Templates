@@ -67,27 +67,28 @@ type Builder =
                                 prop.className "select-none"
                             ]
                             Bulma.block [
-                                prop.onContextMenu (fun e ->
-                                    let term = window.getSelection().ToString().Trim() 
-                                    if term.Length <> 0 then 
-                                        modalContext.setter {
-                                            isActive = true;
-                                            location = int e.pageX, int e.pageY
-                                        }
-                                    else 
-                                        ()
-                                    e.stopPropagation()
-                                    e.preventDefault()
-                                )
-                                prop.className "border border-slate-400 text-justify bg-slate-100 p-3 text-black"
-                                prop.children [
-                                    Highlighter.Highlighter.highlighter [
-                                        Highlighter.Highlighter.textToHighlight (HelperBui.testText.Replace("  ","" ))
-                                        Highlighter.Highlighter.searchWords (annotationToResizeArray) //replace with array of annotated words
-                                        // Highlighter.Highlighter.highlightClassName "highlight"
-                                        Highlighter.Highlighter.autoEscape true
-                                    ]
-                                ]
+                                // prop.onContextMenu (fun e ->
+                                //     let term = window.getSelection().ToString().Trim() 
+                                //     if term.Length <> 0 then 
+                                //         modalContext.setter {
+                                //             isActive = true;
+                                //             location = int e.pageX, int e.pageY
+                                //         }
+                                //     else 
+                                //         ()
+                                //     e.stopPropagation()
+                                //     e.preventDefault()
+                                // )
+                                // prop.className "border border-slate-400 text-justify bg-slate-100 p-3 text-black"
+                                // prop.children [
+                                Components.UploadDisplay()
+                                //     // Highlighter.Highlighter.highlighter [
+                                //     //     Highlighter.Highlighter.textToHighlight (HelperBui.testText.Replace("  ","" ))
+                                //     //     Highlighter.Highlighter.searchWords (annotationToResizeArray) //replace with array of annotated words
+                                //     //     // Highlighter.Highlighter.highlightClassName "highlight"
+                                //     //     Highlighter.Highlighter.autoEscape true
+                                //     // ]
+                                // ]
                             ]
                             //exchange with uploaded string list, parsed from uploaded protocol
                         ]
@@ -100,7 +101,7 @@ type Builder =
                             ]
                             for a in 0 .. (state.Length - 1)  do
                                 Bulma.block [
-                                    prop.className "border border-slate-400 bg-[#E6A5B0] p-3 text-black w-96"
+                                    prop.className "border border-slate-400 bg-[#ffe699] p-3 text-black w-96"
                                     prop.children [
                                         Html.button [
                                             prop.className "delete float-right m-0.5"
@@ -114,18 +115,22 @@ type Builder =
                                         ]
                                         Html.text (state.[a].Key)
                                         Bulma.columns [
-                                            prop.className "py-4"
+                                            prop.className "pt-2 w-full"
                                             column.isHalf
                                             prop.children [
+                                                Bulma.column [
                                                 Bulma.button.button [
                                                     Bulma.button.isSmall
                                                     prop.text "edit"
-                                                    prop.className "is-info"
+                                                    prop.className "is-info w-full"
                                                 ]
-                                                Bulma.button.button [
-                                                    Bulma.button.isSmall
-                                                    prop.text "ontologize"
-                                                    prop.className "is-info mx-3"
+                                                ]
+                                                Bulma.column [
+                                                    Bulma.button.button [
+                                                        Bulma.button.isSmall
+                                                        prop.text "ontologize"
+                                                        prop.className "is-info w-full"
+                                                    ]
                                                 ]
                                                 
                                             ]

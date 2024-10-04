@@ -10,6 +10,8 @@
     <Compile Include="Highlight.fs" />
     <Compile Include="Controller.fs" />
     <Compile Include="Contextmenu.fs" />
+    <Compile Include="Mammoth.fs" />
+    <Compile Include="fileUploader.fs" />
     <Compile Include="Builder.fs" />
     <Compile Include="NavBar.fs" />
     <Compile Include="Footer.fs" />
@@ -21,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Feliz" Version="2.8.0" />
     <PackageReference Include="Feliz.Bulma" Version="3.0.0" />
+    <PackageReference Include="Fable.Promise" Version="3.2.0" />
     <PackageReference Include="Feliz.Router" Version="4.0.0" />
     <PackageReference Include="Fable.SimpleJson" Version="3.24.0" />
   </ItemGroup>

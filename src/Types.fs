@@ -24,3 +24,12 @@ type Page =
     |Builder
     |Contact
     |Help
+
+type UploadFileType =
+  | Docx
+  | PDF
+
+type UploadedFile =
+  | PDF of string
+  | Docx of string
+  | Unset
