@@ -73,9 +73,9 @@ module Contextmenu =
         Html.div [
             prop.tabIndex 0
             preventDefault
-            prop.className "border-slate-400 border-solid border"
+            prop.className "bg-[#cae8f4] border-slate-400 border-solid border"
             prop.style [
-                style.backgroundColor "#cae8f4"
+                style.backgroundColor " "
                 style.position.absolute
                 style.left mousex
                 style.top mousey

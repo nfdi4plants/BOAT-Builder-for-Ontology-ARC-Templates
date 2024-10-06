@@ -27,9 +27,9 @@ type Page =
 
 type UploadFileType =
   | Docx
-  | PDF
+//   | PDF
 
 type UploadedFile =
-  | PDF of string
+//   | PDF of string
   | Docx of string
   | Unset

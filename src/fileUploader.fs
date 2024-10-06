@@ -26,36 +26,53 @@ module private FileReaderHelper =
       Browser.Dom.console.error ("Error reading file", e)
     reader.readAsArrayBuffer(file)
 
-  let readPdf (file: Browser.Types.File) setState =
-    let src = URL.createObjectURL(file)
-    log ("Uploaded PDF:", src)
-    setState (PDF src)
+  // let readPdf (file: Browser.Types.File) setState =
+  //   let src = URL.createObjectURL(file)
+  //   log ("Uploaded PDF:", src)
+  //   setState (PDF src)
 
   let readFromFile (file: Browser.Types.File) setState (fileType: UploadFileType) =
     match fileType with
     | UploadFileType.Docx -> readDocx file setState
-    | UploadFileType.PDF -> readPdf file setState
+    // | UploadFileType.PDF -> readPdf file setState
+
     
 
 type Components =
 
-    static member private DisplayHtml(htmlString: string) = 
+    static member private DisplayHtml(htmlString: string, target:) = 
       Html.div [
         prop.className "content"
         prop.children [
-          Html.h1 "Display Html"
           Html.div [
-            prop.innerHtml htmlString
+            Highlighter.Highlighter.highlighter [
+              Highlighter.Highlighter.textToHighlight (htmlString.Replace("  ","" ))
+              Highlighter.Highlighter.searchWords (annotationToResizeArray) //replace with array of annotated words
+              // Highlighter.Highlighter.highlightClassName "highlight"
+              Highlighter.Highlighter.autoEscape true
+            ]
+            // prop.innerHtml htmlString
           ]
         ]
       ]
 
     /// https://stackoverflow.com/a/60539836/12858021
-    static member private DisplayPDF(pdfSource: string) =
+    static member private DisplayPDF(pdfSource: string, modalContext: DropdownModal) =
       Html.div [
         prop.className "content"
+        prop.onContextMenu (fun e ->
+            let term = Browser.Dom.window.getSelection().ToString().Trim() 
+            if term.Length <> 0 then 
+                modalContext.setter {
+                    isActive = true;
+                    location = int e.pageX, int e.pageY
+                }
+            else 
+                ()
+            e.stopPropagation()
+            e.preventDefault()
+        )
         prop.children [
-          Html.h1 "Display PDF"
           Html.embed [
             prop.src pdfSource
             prop.type' "application/pdf"
@@ -83,7 +100,7 @@ type Components =
                     prop.onChange (fun (e: string) -> 
                       match e with
                       | "Docx" -> setUploadFileType(UploadFileType.Docx)
-                      | "PDF" -> setUploadFileType(UploadFileType.PDF)
+                      // | "PDF" -> setUploadFileType(UploadFileType.PDF)
                       | _ -> ()
                     )
                     prop.children [
@@ -91,10 +108,10 @@ type Components =
                         prop.value "Docx"
                         prop.text "Docx"
                       ]
-                      Html.option [
-                        prop.value "PDF"
-                        prop.text "PDF"
-                      ]
+                      // Html.option [
+                      //   prop.value "PDF"
+                      //   prop.text "PDF"
+                      // ]
                     ]
                   ]
                 ]
@@ -152,7 +169,7 @@ type Components =
     /// A stateful React component that maintains a counter
     /// </summary>
     [<ReactComponent>]
-    static member UploadDisplay() =
+    static member UploadDisplay(modalContext: DropdownModal) =
         let uploadFileType, setUploadFileType = React.useState(UploadFileType.Docx)
         let filehtml, setFilehtml = React.useState(Unset)
         let ref = React.useInputRef()
@@ -170,8 +187,8 @@ type Components =
                         | Unset -> Html.p "No file uploaded"
                         | Docx filehtml ->
                           Components.DisplayHtml(filehtml)
-                        | PDF pdfSource ->
-                          Components.DisplayPDF(pdfSource)
+                        // | PDF pdfSource ->
+                        //   Components.DisplayPDF(pdfSource, modalContext)
                       ]
                     ]
                   ]

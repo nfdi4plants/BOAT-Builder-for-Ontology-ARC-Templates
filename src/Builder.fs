@@ -67,28 +67,30 @@ type Builder =
                                 prop.className "select-none"
                             ]
                             Bulma.block [
-                                // prop.onContextMenu (fun e ->
-                                //     let term = window.getSelection().ToString().Trim() 
-                                //     if term.Length <> 0 then 
-                                //         modalContext.setter {
-                                //             isActive = true;
-                                //             location = int e.pageX, int e.pageY
-                                //         }
-                                //     else 
-                                //         ()
-                                //     e.stopPropagation()
-                                //     e.preventDefault()
-                                // )
-                                // prop.className "border border-slate-400 text-justify bg-slate-100 p-3 text-black"
-                                // prop.children [
-                                Components.UploadDisplay()
+                                prop.onContextMenu (fun e ->
+                                    let term = window.getSelection().ToString().Trim() 
+                                    if term.Length <> 0 then 
+                                        modalContext.setter {
+                                            isActive = true;
+                                            location = int e.pageX, int e.pageY
+                                        }
+                                    else 
+                                        ()
+                                    e.stopPropagation()
+                                    e.preventDefault()
+                                )
+
+                                prop.className "border border-slate-400 text-justify bg-slate-100 p-3 text-black"
+                                prop.children [
+                                    Components.UploadDisplay(modalContext)
                                 //     // Highlighter.Highlighter.highlighter [
                                 //     //     Highlighter.Highlighter.textToHighlight (HelperBui.testText.Replace("  ","" ))
                                 //     //     Highlighter.Highlighter.searchWords (annotationToResizeArray) //replace with array of annotated words
                                 //     //     // Highlighter.Highlighter.highlightClassName "highlight"
                                 //     //     Highlighter.Highlighter.autoEscape true
                                 //     // ]
-                                // ]
+                                ]
+                                
                             ]
                             //exchange with uploaded string list, parsed from uploaded protocol
                         ]
