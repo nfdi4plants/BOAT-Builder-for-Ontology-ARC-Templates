@@ -53,7 +53,10 @@ module private Functions =
                 ()
             Browser.Dom.window.getSelection().removeAllRanges()               
 
-    let propPlaceHolder = fun e ->  () //replace with other functions
+    let propPlaceHolder = fun () ->  () //replace with other functions
+
+    let scrollToTop =
+        fun () -> Browser.Dom.window.scrollTo(0,0)
 
 open Helper
 
@@ -64,11 +67,12 @@ module Contextmenu =
     let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit)=
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
-            button ("Add Annotation", resetter, addAnnotation(state, setState, setLocal), [])
-            button ("Add Ontology", resetter, propPlaceHolder , []) 
+            button ("Add as Key", resetter, addAnnotation(state, setState, setLocal), [])
+            button ("Add as Value", resetter, propPlaceHolder , []) 
             divider
-            button ("Edit Annotation", resetter, propPlaceHolder,  [])
-            button ("Edit Ontology", resetter, propPlaceHolder,  [])
+            button ("Ontologize as Key", resetter, propPlaceHolder,  [])
+            button ("Ontologze as Value", resetter, propPlaceHolder,  [])
+            button ("Scroll to top", resetter, scrollToTop,  [])
         ]
         Html.div [
             prop.tabIndex 0

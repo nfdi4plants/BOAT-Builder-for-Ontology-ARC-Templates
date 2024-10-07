@@ -3,6 +3,7 @@ namespace Components
 open Feliz
 open Feliz.Router
 open Types
+open Fable.SimpleJson
 
 
 module private FileReaderHelper =
@@ -12,13 +13,16 @@ module private FileReaderHelper =
   [<Emit("new FileReader()")>]
   let newFileReader(): Browser.Types.FileReader = jsNative
 
-  let readDocx (file: Browser.Types.File) setState = 
+  let readDocx (file: Browser.Types.File) setState setLocalFile = 
     let reader = newFileReader()
     reader.onload <- fun e ->
       let arrayBuffer = e.target?result
       promise {
         let! r = Mammoth.mammoth.convertToHtml({|arrayBuffer = arrayBuffer|})
-        setState (Docx r.value)
+        (Docx r.value)
+        |> fun t ->
+          t |> setState
+          t |> setLocalFile "file"
       }
       |> Promise.start
 
@@ -31,26 +35,24 @@ module private FileReaderHelper =
   //   log ("Uploaded PDF:", src)
   //   setState (PDF src)
 
-  let readFromFile (file: Browser.Types.File) setState (fileType: UploadFileType) =
+  let readFromFile (file: Browser.Types.File) setState (fileType: UploadFileType) setLocalFile =
     match fileType with
-    | UploadFileType.Docx -> readDocx file setState
+    | UploadFileType.Docx -> readDocx file setState setLocalFile
     // | UploadFileType.PDF -> readPdf file setState
-
-    
 
 type Components =
 
-    static member private DisplayHtml(htmlString: string) = 
-      Html.div [
-        prop.className "prose lg:prose-xl"
+    static member private DisplayHtml(htmlString: string, target: ResizeArray<string> ) = 
+      Html.div [       
+        prop.className "prose lg:prose-xl text-justify bg-slate-100 p-3 text-black max-w-max"
         prop.children [
+          // Highlighter.Highlighter.highlighter [
+          //   Highlighter.Highlighter.textToHighlight (htmlString)
+          //   Highlighter.Highlighter.searchWords (target) 
+          //   Highlighter.Highlighter.highlightClassName "highlight"
+          //   Highlighter.Highlighter.autoEscape true
+          // ]
           Html.div [
-            // Highlighter.Highlighter.highlighter [
-            //   Highlighter.Highlighter.textToHighlight (htmlString.Replace("  ","" ))
-            //   // Highlighter.Highlighter.searchWords (annotationToResizeArray) //replace with array of annotated words
-            //   // Highlighter.Highlighter.highlightClassName "highlight"
-            //   Highlighter.Highlighter.autoEscape true
-            // ]
             prop.innerHtml htmlString
           ]
         ]
@@ -85,7 +87,7 @@ type Components =
         ]
       ]
 
-    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) uploadFileType setUploadFileType setFilehtml =
+    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml (setLocalFile: string -> UploadedFile -> unit) =
       Html.div [
         prop.className "field has-addons"
         prop.children [
@@ -118,6 +120,7 @@ type Components =
               ]
             ]
           ]
+          
           // file upload input
           Html.div [
             prop.className "control"
@@ -133,7 +136,7 @@ type Components =
                         prop.ref ref
                         prop.type'.file
                         prop.onChange (fun (f: Browser.Types.File) -> 
-                          FileReaderHelper.readFromFile f setFilehtml uploadFileType
+                          FileReaderHelper.readFromFile f setFilehtml uploadFileType setLocalFile
                           if ref.current.IsSome then
                             ref.current.Value.value <- null
                         )
@@ -156,8 +159,27 @@ type Components =
                           ]
                         ]
                       ]
+                      
                     ]
                   ]
+                ]
+              ]
+            ]
+          ]
+          Html.button [
+            if filehtml = Unset then prop.hidden (true)
+            prop.className "pl-5 cursor-default"
+          
+            prop.children [
+              Html.span [
+                Html.i [
+                  prop.className "fa-solid fa-trash-can cursor-pointer"
+                  prop.onClick (fun e -> 
+                    Unset
+                    |> fun t ->
+                    t |> setFilehtml
+                    t |> setLocalFile "file"                          
+                  )
                 ]
               ]
             ]
@@ -165,28 +187,40 @@ type Components =
         ]
       ]
 
+      
+
     /// <summary>
     /// A stateful React component that maintains a counter
     /// </summary>
     [<ReactComponent>]
-    static member UploadDisplay(modalContext: DropdownModal) =
+    static member UploadDisplay(annoArray: ResizeArray<string>, isLocalStorageClear: string -> unit -> bool) =
         let uploadFileType, setUploadFileType = React.useState(UploadFileType.Docx)
-        let filehtml, setFilehtml = React.useState(Unset)
+
+        let initialInteraction (id: string) =
+            if isLocalStorageClear id () = true then Unset
+            else Json.parseAs<UploadedFile> (Browser.WebStorage.localStorage.getItem id)  
+
+        let filehtml, setFilehtml = React.useState(initialInteraction "file")
+
+        let setLocalFile (id: string)(nextFile: UploadedFile) =
+            let JSONString = Json.stringify nextFile 
+            Browser.WebStorage.localStorage.setItem(id, JSONString)
+
         let ref = React.useInputRef()
         Html.div [
-          prop.className "section" 
+          prop.className "section p-0" 
           prop.children [
               Html.div [
                   prop.className "container"
                   prop.children [
-                    Components.FileUpload ref uploadFileType setUploadFileType setFilehtml
+                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile
                     Html.div [
                       prop.className "field"
                       prop.children [
                         match filehtml with
-                        | Unset -> Html.p "No file uploaded"
+                        | Unset -> Html.p "Upload a file!"
                         | Docx filehtml ->
-                          Components.DisplayHtml(filehtml)
+                          Components.DisplayHtml(filehtml, annoArray)
                         // | PDF pdfSource ->
                         //   Components.DisplayPDF(pdfSource, modalContext)
                       ]

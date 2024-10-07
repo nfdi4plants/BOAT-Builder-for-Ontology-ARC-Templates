@@ -51,7 +51,7 @@ type View =
                         prop.className "grow"
                         prop.children [
                             match currentpage with
-                            |Types.Page.Builder -> Components.Builder.Main( AnnotationState, setAnnotationState, setLocalStorageAnnotation )
+                            |Types.Page.Builder -> Components.Builder.Main( AnnotationState, setAnnotationState, setLocalStorageAnnotation, isLocalStorageClear)
                             |Types.Page.Contact -> Components.Contact.Main()
                             |Types.Page.Help -> Components.Help.Main()
                             modalactivator
