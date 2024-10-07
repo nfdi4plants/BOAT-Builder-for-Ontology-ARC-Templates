@@ -40,18 +40,18 @@ module private FileReaderHelper =
 
 type Components =
 
-    static member private DisplayHtml(htmlString: string, target:) = 
+    static member private DisplayHtml(htmlString: string) = 
       Html.div [
-        prop.className "content"
+        prop.className "prose lg:prose-xl"
         prop.children [
           Html.div [
-            Highlighter.Highlighter.highlighter [
-              Highlighter.Highlighter.textToHighlight (htmlString.Replace("  ","" ))
-              Highlighter.Highlighter.searchWords (annotationToResizeArray) //replace with array of annotated words
-              // Highlighter.Highlighter.highlightClassName "highlight"
-              Highlighter.Highlighter.autoEscape true
-            ]
-            // prop.innerHtml htmlString
+            // Highlighter.Highlighter.highlighter [
+            //   Highlighter.Highlighter.textToHighlight (htmlString.Replace("  ","" ))
+            //   // Highlighter.Highlighter.searchWords (annotationToResizeArray) //replace with array of annotated words
+            //   // Highlighter.Highlighter.highlightClassName "highlight"
+            //   Highlighter.Highlighter.autoEscape true
+            // ]
+            prop.innerHtml htmlString
           ]
         ]
       ]
