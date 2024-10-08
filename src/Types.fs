@@ -1,11 +1,19 @@
 module Types
 
+// open ARCtrl
+
 type Protocoltext = {
     Content: string list
 }
 
+// type Annotation = {
+//     Key: OntologyAnnotation option
+//     Value: CompositeCell option
+// }
+
 type Annotation = {
     Key: string
+    // Value: string
 }
 
 type ModalInfo = {

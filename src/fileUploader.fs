@@ -42,7 +42,7 @@ module private FileReaderHelper =
 
 type Components =
 
-    static member private DisplayHtml(htmlString: string, target: ResizeArray<string> ) = 
+    static member DisplayHtml(htmlString: string) = 
       Html.div [       
         prop.className "prose lg:prose-xl text-justify bg-slate-100 p-3 text-black max-w-max"
         prop.children [
@@ -59,7 +59,7 @@ type Components =
       ]
 
     /// https://stackoverflow.com/a/60539836/12858021
-    static member private DisplayPDF(pdfSource: string, modalContext: DropdownModal) =
+    static member DisplayPDF(pdfSource: string, modalContext: DropdownModal) =
       Html.div [
         prop.className "content"
         prop.onContextMenu (fun e ->
@@ -87,100 +87,106 @@ type Components =
         ]
       ]
 
-    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml (setLocalFile: string -> UploadedFile -> unit) =
+    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml (setLocalFile: string -> UploadedFile -> unit) setState setLocal =
       Html.div [
-        prop.className "field has-addons"
-        prop.children [
-          // upload select
-          Html.p [
-            prop.className "control"
-            prop.children [
-              Html.span [
-                prop.className "select"
-                prop.children [
-                  Html.select [
-                    prop.onChange (fun (e: string) -> 
-                      match e with
-                      | "Docx" -> setUploadFileType(UploadFileType.Docx)
-                      // | "PDF" -> setUploadFileType(UploadFileType.PDF)
-                      | _ -> ()
-                    )
-                    prop.children [
-                      Html.option [
-                        prop.value "Docx"
-                        prop.text "Docx"
+        Html.div [
+          prop.className "field has-addons"
+          prop.children [
+            // upload select
+            Html.p [
+              prop.className "control"
+              prop.children [
+                Html.span [
+                  prop.className "select"
+                  prop.children [
+                    Html.select [
+                      prop.onChange (fun (e: string) -> 
+                        match e with
+                        | "Docx" -> setUploadFileType(UploadFileType.Docx)
+                        // | "PDF" -> setUploadFileType(UploadFileType.PDF)
+                        | _ -> ()
+                      )
+                      prop.children [
+                        Html.option [
+                          prop.value "Docx"
+                          prop.text "Docx"
+                        ]
+                        // Html.option [
+                        //   prop.value "PDF"
+                        //   prop.text "PDF"
+                        // ]
                       ]
-                      // Html.option [
-                      //   prop.value "PDF"
-                      //   prop.text "PDF"
-                      // ]
                     ]
                   ]
                 ]
               ]
             ]
-          ]
-          
-          // file upload input
-          Html.div [
-            prop.className "control"
-            prop.children [
-              Html.div [
-                prop.className "file"
-                prop.children [
-                  Html.label [
-                    prop.className "file-label"
-                    prop.children [
-                      Html.input [
-                        prop.className "file-input"
-                        prop.ref ref
-                        prop.type'.file
-                        prop.onChange (fun (f: Browser.Types.File) -> 
-                          FileReaderHelper.readFromFile f setFilehtml uploadFileType setLocalFile
-                          if ref.current.IsSome then
-                            ref.current.Value.value <- null
-                        )
-                      ]
-                      Html.span [
-                        prop.className "file-cta"
-                        prop.style [style.borderRadius(0, 6, 6, 0)]
-                        prop.children [
-                          Html.span [
-                            prop.className "file-icon"
-                            prop.children [
-                              Html.i [
-                                prop.className "fa-solid fa-upload"
+            
+            // file upload input
+            Html.div [
+              prop.className "control"
+              prop.children [
+                Html.div [
+                  prop.className "file"
+                  prop.children [
+                    Html.label [
+                      prop.className "file-label"
+                      prop.children [
+                        Html.input [
+                          prop.className "file-input"
+                          prop.ref ref
+                          prop.type'.file
+                          prop.onChange (fun (f: Browser.Types.File) -> 
+                            FileReaderHelper.readFromFile f setFilehtml uploadFileType setLocalFile
+                            if ref.current.IsSome then
+                              ref.current.Value.value <- null
+                          )
+                        ]
+                        Html.span [
+                          prop.className "file-cta"
+                          prop.style [style.borderRadius(0, 6, 6, 0)]
+                          prop.children [
+                            Html.span [
+                              prop.className "file-icon"
+                              prop.children [
+                                Html.i [
+                                  prop.className "fa-solid fa-upload"
+                                ]
                               ]
                             ]
-                          ]
-                          Html.span [
-                            prop.className "file-label"
-                            prop.text "Choose a file…"
+                            Html.span [
+                              prop.className "file-label"
+                              prop.text "Choose a file…"
+                            ]
                           ]
                         ]
+                        
                       ]
-                      
                     ]
                   ]
                 ]
               ]
             ]
+            
           ]
-          Html.button [
-            if filehtml = Unset then prop.hidden (true)
-            prop.className "pl-5 cursor-default"
-          
-            prop.children [
-              Html.span [
-                Html.i [
-                  prop.className "fa-solid fa-trash-can cursor-pointer"
-                  prop.onClick (fun e -> 
-                    Unset
-                    |> fun t ->
-                    t |> setFilehtml
-                    t |> setLocalFile "file"                          
-                  )
-                ]
+        ]
+        Html.button [
+          if filehtml = Unset then prop.hidden (true)
+          prop.children [
+            Html.span [
+              Html.i [
+                prop.className "fa-solid fa-trash-can"
+                prop.onClick (fun e -> 
+                  Unset
+                  |> fun t ->
+                  t |> setFilehtml
+                  t |> setLocalFile "file"
+
+                  []
+                  |> fun t ->
+                  t |> setState
+                  t |> setLocal "Annotations"                          
+                )
               ]
             ]
           ]
@@ -193,14 +199,9 @@ type Components =
     /// A stateful React component that maintains a counter
     /// </summary>
     [<ReactComponent>]
-    static member UploadDisplay(annoArray: ResizeArray<string>, isLocalStorageClear: string -> unit -> bool) =
+    static member UploadDisplay(filehtml, setFilehtml, setState, setLocal) =
+    
         let uploadFileType, setUploadFileType = React.useState(UploadFileType.Docx)
-
-        let initialInteraction (id: string) =
-            if isLocalStorageClear id () = true then Unset
-            else Json.parseAs<UploadedFile> (Browser.WebStorage.localStorage.getItem id)  
-
-        let filehtml, setFilehtml = React.useState(initialInteraction "file")
 
         let setLocalFile (id: string)(nextFile: UploadedFile) =
             let JSONString = Json.stringify nextFile 
@@ -208,23 +209,12 @@ type Components =
 
         let ref = React.useInputRef()
         Html.div [
-          prop.className "section p-0" 
+          prop.className "section p-0 space-y-4" 
           prop.children [
               Html.div [
                   prop.className "container"
                   prop.children [
-                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile
-                    Html.div [
-                      prop.className "field"
-                      prop.children [
-                        match filehtml with
-                        | Unset -> Html.p "Upload a file!"
-                        | Docx filehtml ->
-                          Components.DisplayHtml(filehtml, annoArray)
-                        // | PDF pdfSource ->
-                        //   Components.DisplayPDF(pdfSource, modalContext)
-                      ]
-                    ]
+                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setLocal
                   ]
               ]
           ]

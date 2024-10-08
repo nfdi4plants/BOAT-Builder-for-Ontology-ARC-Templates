@@ -5,6 +5,7 @@ open Feliz.Bulma
 open Types
 open Browser
 open Browser.Types
+// open ARCtrl
 
 module private Helper =
 
@@ -40,23 +41,28 @@ module private Helper =
         ]        
 
 module private Functions =
-    let addAnnotation (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) =
-        fun () ->
-            let term = window.getSelection().ToString().Trim()
-            if term.Length <> 0 then 
-                let newAnno = {Key = term}::state
-                newAnno
-                |> fun t ->
-                t |> setState
-                t |> setLocal "Annotations"
-            else 
-                ()
-            Browser.Dom.window.getSelection().removeAllRanges()               
+    let addAnnotationKey (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
+        let term = window.getSelection().ToString().Trim()
+        if term.Length <> 0 then 
+            // let newAnno = {Key = OntologyAnnotation(term)|> Some ; Value = None}::state
+            let newAnno = 
+                {Key = term; 
+                // Value = "-"
+                }::state
+            newAnno
+            |> fun t ->
+            t |> setState
+            t |> setLocal "Annotations"
+        else 
+            ()
+        Browser.Dom.window.getSelection().removeAllRanges()               
 
-    let propPlaceHolder = fun () ->  () //replace with other functions
+    let propPlaceHolder() =  () //replace with other functions
 
-    let scrollToTop =
-        fun () -> Browser.Dom.window.scrollTo(0,0)
+    // let scrollToTop() =
+    //     console.log(Browser.Dom.window)
+    //     Browser.Dom.document.body.scrollTo(0,0)
+
 
 open Helper
 
@@ -67,12 +73,12 @@ module Contextmenu =
     let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit)=
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
-            button ("Add as Key", resetter, addAnnotation(state, setState, setLocal), [])
+            button ("Add as Key", resetter, addAnnotationKey(state, setState, setLocal), [])
             button ("Add as Value", resetter, propPlaceHolder , []) 
             divider
             button ("Ontologize as Key", resetter, propPlaceHolder,  [])
             button ("Ontologze as Value", resetter, propPlaceHolder,  [])
-            button ("Scroll to top", resetter, scrollToTop,  [])
+            // button ("Jump to top", resetter, scrollToTop,  [])
         ]
         Html.div [
             prop.tabIndex 0
