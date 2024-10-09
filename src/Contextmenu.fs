@@ -32,7 +32,6 @@ module private Helper =
                 prop.text name
             ]
         ]
-
     let divider = 
         Html.div [ 
             prop.className "border border-slate-400"
@@ -42,13 +41,14 @@ module private Helper =
         ]        
 
 module private Functions =
-    let addAnnotationKey (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
+    let addAnnotationKeyNew (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
             // let newAnno = {Key = OntologyAnnotation(name = term) |> Some ; Value = None}::state
             let newAnno = 
-                {Key = term; Value = "-"}::state
-            newAnno
+                {Key = term; Value = ""}::state
+            
+            newAnno |> List.rev
             |> fun t ->
             t |> setState
             t |> setLocal "Annotations"
@@ -56,27 +56,57 @@ module private Functions =
             ()
         Browser.Dom.window.getSelection().removeAllRanges()  
 
-    let addAnnotationValue (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
+    let addAnnotationValueNew (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
             // let newAnno = {Key = None  ; Value = CompositeCell.createFreeText(term) |> Some }::state
             let newAnno = 
-                {Key = "-"; Value = term }::state
-            newAnno
+                {Key = ""; Value = term }::state
+            newAnno |> List.rev
             |> fun t ->
             t |> setState
             t |> setLocal "Annotations"
         else 
             ()
-        Browser.Dom.window.getSelection().removeAllRanges()  
-            
-                
+        Browser.Dom.window.getSelection().removeAllRanges()   
 
     let propPlaceHolder() =  () //replace with other functions
 
-    // let scrollToTop() =
-    //     console.log(Browser.Dom.window)
-    //     Browser.Dom.document.body.scrollTo(0,0)
+    let addToLastAnnoAsKey(state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) () =
+        let term = window.getSelection().ToString().Trim()
+        if term.Length <> 0 then 
+            let updatetedAnno = 
+                {state.[state.Length - 1] with Key = term}
+
+            let lastIndex = state.Length - 1
+
+            let newAnnoList =
+                state
+                |> List.mapi (fun i elem -> if i = lastIndex then updatetedAnno else elem)
+
+            newAnnoList
+            |> fun t ->
+            t |> setState
+            t |> setLocal "Annotations"
+
+    let addToLastAnnoAsValue(state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) () =
+        let term = window.getSelection().ToString().Trim()
+        if term.Length <> 0 then 
+            let updatetedAnno = 
+                {state.[state.Length - 1] with Value = term}
+
+            let lastIndex = state.Length - 1
+
+            let newAnnoList =
+                state
+                |> List.mapi (fun i elem -> if i = lastIndex then updatetedAnno else elem)
+
+            newAnnoList
+            |> fun t ->
+            t |> setState
+            t |> setLocal "Annotations"
+        
+
 
 
 open Helper
@@ -84,15 +114,21 @@ open Helper
 open Functions
 
 module Contextmenu =
-        
     let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit)=
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
-            button ("Add as Key", resetter, addAnnotationKey(state, setState, setLocal), [])
-            button ("Add as Value", resetter, addAnnotationValue(state, setState, setLocal), []) 
+            button ("Add as new Key", resetter, addAnnotationKeyNew(state, setState, setLocal), [])
+            button ("Add as new Value", resetter, addAnnotationValueNew(state, setState, setLocal), []) 
+            Html.div [ 
+                prop.className "text-gray-500 text-sm p-2"
+                prop.text "Add to last annotation .."
+                // prop.style 
+                    // [style.margin(2,0); style.width (length.perc 75); style.margin length.auto] 
+                preventDefault
+            ]
             divider
-            button ("Ontologize as Key", resetter, propPlaceHolder,  [])
-            button ("Ontologize as Value", resetter, propPlaceHolder,  [])
+            button ("as Key", resetter, addToLastAnnoAsKey(state, setState, setLocal),  [])
+            button ("as Value", resetter, addToLastAnnoAsValue(state, setState, setLocal),  [])
             // button ("Jump to top", resetter, scrollToTop,  [])
         ]
         Html.div [

@@ -23,6 +23,9 @@ type Builder =
 
         // let annotationToResizeArray = state |> List.map (fun i -> i.Key ) |> List.toArray |> ResizeArray
 
+        // let (keyInput: string, setKeyInput)= React.useState ("")
+        // let (valueInput: string, setValueInput)= React.useState ("")
+
         let initialInteraction (id: string) =
             if isLocalStorageClear id () = true then Unset
             else Json.parseAs<UploadedFile> (Browser.WebStorage.localStorage.getItem id)  
@@ -35,6 +38,7 @@ type Builder =
         }
 
         let modalContext = React.useContext (Contexts.ModalContext.createModalContext)
+        let (activeField: ActiveField option, setActiveField) = React.useState ( Some ActiveField.Unset)
 
         let turnOffContext (event: Browser.Types.Event) = 
             modalContext.setter initialModal 
@@ -115,17 +119,18 @@ type Builder =
                         prop.children [
                             Html.div [
                                 prop.className "fixed select-none "
+                                if filehtml = Unset then prop.hidden (true)
                                 prop.children [
                                     Bulma.block [
                                         prop.text "Annotations"
                                     ]
                                     for a in 0 .. (state.Length - 1)  do
-                                        
                                         Bulma.block [
-                                            prop.className "border border-slate-400 bg-[#ffe699] p-3 text-black max-w-96"
+                                            prop.className "border border-slate-400 bg-[#ffe699] p-3 text-black w-96 space-y-2"
                                             prop.children [
-                                                Html.button [
-                                                    prop.className "delete float-right m-0.5"
+                                                Html.span "Key: "
+                                                Html.span [
+                                                    prop.className "delete float-right mt-0"
                                                     prop.onClick (fun _ -> 
                                                     let newAnno = List.removeAt a state 
                                                     newAnno
@@ -134,25 +139,58 @@ type Builder =
                                                     t |> setLocal "Annotations"
                                                     )
                                                 ]
-                                                Html.p ("Key: " + (state.[a].Key 
                                                 // Option.map (fun e -> e.NameText) |> Option.defaultValue "- "
-                                                ))
-                                                Html.p ("Value: " + (state.[a].Value 
+                                                Bulma.input.text [
+                                                    input.isSmall
+                                                    prop.value state.[a].Key
+                                                    prop.className ""
+                                                    // prop.onMouseDown (fun _ ->
+                                                    //     setActiveField (Some Key) 
+                                                    // )
+                                                    prop.onChange (fun (x:string) -> 
+                                                        let updatetedAnno = 
+                                                            {state.[a] with Key = x}
+
+                                                        let newAnnoList =
+                                                            state
+                                                            |> List.mapi (fun i elem -> if i = a then updatetedAnno else elem)
+
+                                                        newAnnoList
+                                                        |> fun t ->
+                                                        t |> setState
+                                                        t |> setLocal "Annotations"
+                                                    )
+                                                ]
+                                                Html.p "Value: "
                                                 // |> Option.map (fun e -> e.ToString()) |> Option.defaultValue "-" )
-                                                ))
-                                                
+                                                Bulma.input.text [
+                                                    input.isSmall
+                                                    prop.value state.[a].Value
+                                                    prop.className ""
+                                                    // prop.onMouseDown (fun _ ->
+                                                    //     setActiveField (Some Key) 
+                                                    // )
+                                                    prop.onChange (fun (x:string) -> 
+                                                        let updatetedAnno = 
+                                                            {state.[a] with Value = x}
+                                                            
+                                                        let newAnnoList =
+                                                            state
+                                                            |> List.mapi (fun i elem -> if i = a then updatetedAnno else elem)
+
+                                                        newAnnoList
+                                                        |> fun t ->
+                                                        t |> setState
+                                                        t |> setLocal "Annotations"
+                                                    )
+                                                ]
                                                 Bulma.block [
-                                                    prop.className "space-x-4 pt-3"
+                                                    prop.className "pt-2 "
                                                     prop.children [
                                                         Bulma.button.button [
                                                             Bulma.button.isSmall
-                                                            prop.text "edit"
-                                                            prop.className "is-info max-w-40"
-                                                        ]
-                                                        Bulma.button.button [
-                                                            Bulma.button.isSmall
                                                             prop.text "ontologize"
-                                                            prop.className "is-info max-w-40"
+                                                            prop.className "is-info w-full"
                                                         ]
                                                     ]
                                                 ]
