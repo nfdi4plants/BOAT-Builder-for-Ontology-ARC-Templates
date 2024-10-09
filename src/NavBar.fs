@@ -37,10 +37,6 @@ type NavBar =
                             prop.onClick (fun _ -> ()) 
                         ]
                         Bulma.navbarItem.a [ 
-                            prop.text "Restart"
-                            prop.className "hover:bg-[#3f8fae]"
-                        ]
-                        Bulma.navbarItem.a [ 
                             prop.text "Help"
                             prop.className "hover:bg-[#3f8fae]"
                             prop.onClick (fun _ -> setPage(Types.Page.Help)) 

@@ -5,7 +5,8 @@ open Feliz.Bulma
 open Types
 open Browser
 open Browser.Types
-// open ARCtrl
+open ARCtrl
+open ARCtrl.Json
 
 module private Helper =
 
@@ -44,18 +45,32 @@ module private Functions =
     let addAnnotationKey (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
-            // let newAnno = {Key = OntologyAnnotation(term)|> Some ; Value = None}::state
+            // let newAnno = {Key = OntologyAnnotation(name = term) |> Some ; Value = None}::state
             let newAnno = 
-                {Key = term; 
-                // Value = "-"
-                }::state
+                {Key = term; Value = "-"}::state
             newAnno
             |> fun t ->
             t |> setState
             t |> setLocal "Annotations"
         else 
             ()
-        Browser.Dom.window.getSelection().removeAllRanges()               
+        Browser.Dom.window.getSelection().removeAllRanges()  
+
+    let addAnnotationValue (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
+        let term = window.getSelection().ToString().Trim()
+        if term.Length <> 0 then 
+            // let newAnno = {Key = None  ; Value = CompositeCell.createFreeText(term) |> Some }::state
+            let newAnno = 
+                {Key = "-"; Value = term }::state
+            newAnno
+            |> fun t ->
+            t |> setState
+            t |> setLocal "Annotations"
+        else 
+            ()
+        Browser.Dom.window.getSelection().removeAllRanges()  
+            
+                
 
     let propPlaceHolder() =  () //replace with other functions
 
@@ -74,10 +89,10 @@ module Contextmenu =
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
             button ("Add as Key", resetter, addAnnotationKey(state, setState, setLocal), [])
-            button ("Add as Value", resetter, propPlaceHolder , []) 
+            button ("Add as Value", resetter, addAnnotationValue(state, setState, setLocal), []) 
             divider
             button ("Ontologize as Key", resetter, propPlaceHolder,  [])
-            button ("Ontologze as Value", resetter, propPlaceHolder,  [])
+            button ("Ontologize as Value", resetter, propPlaceHolder,  [])
             // button ("Jump to top", resetter, scrollToTop,  [])
         ]
         Html.div [

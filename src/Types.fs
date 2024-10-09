@@ -1,6 +1,6 @@
 module Types
 
-// open ARCtrl
+open ARCtrl
 
 type Protocoltext = {
     Content: string list
@@ -13,7 +13,7 @@ type Protocoltext = {
 
 type Annotation = {
     Key: string
-    // Value: string
+    Value: string
 }
 
 type ModalInfo = {

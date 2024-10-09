@@ -8,7 +8,7 @@ open Types
 open Fable.SimpleJson
 open Fable.Core.JS
 open System
-// open ARCtrl
+open ARCtrl
 
 module List =
   let rec removeAt index list =
@@ -114,16 +114,15 @@ type Builder =
                         prop.className "relative"
                         prop.children [
                             Html.div [
-                                prop.className "fixed select-none"
+                                prop.className "fixed select-none "
                                 prop.children [
                                     Bulma.block [
                                         prop.text "Annotations"
-                                        prop.className "pb-14"
-                                        
                                     ]
                                     for a in 0 .. (state.Length - 1)  do
+                                        
                                         Bulma.block [
-                                            prop.className "border border-slate-400 bg-[#ffe699] p-3 text-black w-96"
+                                            prop.className "border border-slate-400 bg-[#ffe699] p-3 text-black max-w-96"
                                             prop.children [
                                                 Html.button [
                                                     prop.className "delete float-right m-0.5"
@@ -135,10 +134,13 @@ type Builder =
                                                     t |> setLocal "Annotations"
                                                     )
                                                 ]
-                                                // Html.p (state.[a].Key |> Option.map (fun e -> e.NameText) |> Option.defaultValue "-")
-                                                // Html.p (state.[a].Value |> Option.map (fun e -> e.ToString()) |> Option.defaultValue "-")
-                                                Html.p ("Key: " + state.[a].Key)
-                                                // Html.p (state.[a].Value)
+                                                Html.p ("Key: " + (state.[a].Key 
+                                                // Option.map (fun e -> e.NameText) |> Option.defaultValue "- "
+                                                ))
+                                                Html.p ("Value: " + (state.[a].Value 
+                                                // |> Option.map (fun e -> e.ToString()) |> Option.defaultValue "-" )
+                                                ))
+                                                
                                                 Bulma.block [
                                                     prop.className "space-x-4 pt-3"
                                                     prop.children [

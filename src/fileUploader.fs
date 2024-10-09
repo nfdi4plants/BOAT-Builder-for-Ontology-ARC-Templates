@@ -4,6 +4,7 @@ open Feliz
 open Feliz.Router
 open Types
 open Fable.SimpleJson
+open Feliz.Bulma
 
 
 module private FileReaderHelper =
@@ -41,17 +42,10 @@ module private FileReaderHelper =
     // | UploadFileType.PDF -> readPdf file setState
 
 type Components =
-
     static member DisplayHtml(htmlString: string) = 
       Html.div [       
         prop.className "prose lg:prose-xl text-justify bg-slate-100 p-3 text-black max-w-max"
         prop.children [
-          // Highlighter.Highlighter.highlighter [
-          //   Highlighter.Highlighter.textToHighlight (htmlString)
-          //   Highlighter.Highlighter.searchWords (target) 
-          //   Highlighter.Highlighter.highlightClassName "highlight"
-          //   Highlighter.Highlighter.autoEscape true
-          // ]
           Html.div [
             prop.innerHtml htmlString
           ]
@@ -89,89 +83,91 @@ type Components =
 
     static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml (setLocalFile: string -> UploadedFile -> unit) setState setLocal =
       Html.div [
-        Html.div [
-          prop.className "field has-addons"
-          prop.children [
-            // upload select
-            Html.p [
-              prop.className "control"
-              prop.children [
-                Html.span [
-                  prop.className "select"
-                  prop.children [
-                    Html.select [
-                      prop.onChange (fun (e: string) -> 
-                        match e with
-                        | "Docx" -> setUploadFileType(UploadFileType.Docx)
-                        // | "PDF" -> setUploadFileType(UploadFileType.PDF)
-                        | _ -> ()
-                      )
-                      prop.children [
-                        Html.option [
-                          prop.value "Docx"
-                          prop.text "Docx"
+        Bulma.block [
+          Html.div [
+            prop.className "field has-addons"
+            prop.children [
+              // upload select
+              Html.p [
+                prop.className "control"
+                prop.children [
+                  Html.span [
+                    prop.className "select"
+                    prop.children [
+                      Html.select [
+                        prop.onChange (fun (e: string) -> 
+                          match e with
+                          | "Docx" -> setUploadFileType(UploadFileType.Docx)
+                          // | "PDF" -> setUploadFileType(UploadFileType.PDF)
+                          | _ -> ()
+                        )
+                        prop.children [
+                          Html.option [
+                            prop.value "Docx"
+                            prop.text "Docx"
+                          ]
+                          // Html.option [
+                          //   prop.value "PDF"
+                          //   prop.text "PDF"
+                          // ]
                         ]
-                        // Html.option [
-                        //   prop.value "PDF"
-                        //   prop.text "PDF"
-                        // ]
                       ]
                     ]
                   ]
                 ]
               ]
-            ]
-            
-            // file upload input
-            Html.div [
-              prop.className "control"
-              prop.children [
-                Html.div [
-                  prop.className "file"
-                  prop.children [
-                    Html.label [
-                      prop.className "file-label"
-                      prop.children [
-                        Html.input [
-                          prop.className "file-input"
-                          prop.ref ref
-                          prop.type'.file
-                          prop.onChange (fun (f: Browser.Types.File) -> 
-                            FileReaderHelper.readFromFile f setFilehtml uploadFileType setLocalFile
-                            if ref.current.IsSome then
-                              ref.current.Value.value <- null
-                          )
-                        ]
-                        Html.span [
-                          prop.className "file-cta"
-                          prop.style [style.borderRadius(0, 6, 6, 0)]
-                          prop.children [
-                            Html.span [
-                              prop.className "file-icon"
-                              prop.children [
-                                Html.i [
-                                  prop.className "fa-solid fa-upload"
+              
+              // file upload input
+              Html.div [
+                prop.className "control"
+                prop.children [
+                  Html.div [
+                    prop.className "file"
+                    prop.children [
+                      Html.label [
+                        prop.className "file-label"
+                        prop.children [
+                          Html.input [
+                            prop.className "file-input"
+                            prop.ref ref
+                            prop.type'.file
+                            prop.onChange (fun (f: Browser.Types.File) -> 
+                              FileReaderHelper.readFromFile f setFilehtml uploadFileType setLocalFile
+                              if ref.current.IsSome then
+                                ref.current.Value.value <- null
+                            )
+                          ]
+                          Html.span [
+                            prop.className "file-cta"
+                            prop.style [style.borderRadius(0, 6, 6, 0)]
+                            prop.children [
+                              Html.span [
+                                prop.className "file-icon"
+                                prop.children [
+                                  Html.i [
+                                    prop.className "fa-solid fa-upload"
+                                  ]
                                 ]
                               ]
-                            ]
-                            Html.span [
-                              prop.className "file-label"
-                              prop.text "Choose a file…"
+                              Html.span [
+                                prop.className "file-label"
+                                prop.text "Choose a file…"
+                              ]
                             ]
                           ]
+                          
                         ]
-                        
                       ]
                     ]
                   ]
                 ]
               ]
             ]
-            
           ]
         ]
         Html.button [
           if filehtml = Unset then prop.hidden (true)
+          prop.className "pl-1"
           prop.children [
             Html.span [
               Html.i [
