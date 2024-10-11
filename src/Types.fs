@@ -1,6 +1,6 @@
 module Types
 
-open ARCtrl
+// open ARCtrl
 
 type Protocoltext = {
     Content: string list

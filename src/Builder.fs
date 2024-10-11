@@ -8,7 +8,7 @@ open Types
 open Fable.SimpleJson
 open Fable.Core.JS
 open System
-open ARCtrl
+// open ARCtrl
 
 module List =
   let rec removeAt index list =
@@ -184,16 +184,16 @@ type Builder =
                                                         t |> setLocal "Annotations"
                                                     )
                                                 ]
-                                                Bulma.block [
-                                                    prop.className "pt-2 "
-                                                    prop.children [
-                                                        Bulma.button.button [
-                                                            Bulma.button.isSmall
-                                                            prop.text "ontologize"
-                                                            prop.className "is-info w-full"
-                                                        ]
-                                                    ]
-                                                ]
+                                                // Bulma.block [
+                                                //     prop.className "pt-2 "
+                                                //     prop.children [
+                                                //         Bulma.button.button [
+                                                //             Bulma.button.isSmall
+                                                //             prop.text "ontologize"
+                                                //             prop.className "is-info w-full"
+                                                //         ]
+                                                //     ]
+                                                // ]
                                             ]
                                         ]
                                 ]
