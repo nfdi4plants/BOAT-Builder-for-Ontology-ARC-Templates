@@ -1,20 +1,20 @@
 module Types
 
-// open ARCtrl
+open ARCtrl
 
 type Protocoltext = {
     Content: string list
 }
 
-// type Annotation = {
-//     Key: OntologyAnnotation option
-//     Value: CompositeCell option
-// }
-
 type Annotation = {
-    Key: string
-    Value: string
+    Key: OntologyAnnotation option
+    Value: CompositeCell option
 }
+
+// type Annotation = {
+//     Key: string
+//     Value: string
+// }
 
 type ModalInfo = {
     isActive: bool

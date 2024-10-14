@@ -4,7 +4,10 @@ open Feliz
 open Types
 open Components
 open Fable.SimpleJson
+open ARCtrl.Json
+open Thoth.Json.Core
 
+        
 type View =
     [<ReactComponent>]
     static member Main() =
@@ -16,13 +19,17 @@ type View =
 
         let initialInteraction (id: string) =
             if isLocalStorageClear id () = true then []
-            else Json.parseAs<Annotation list> (Browser.WebStorage.localStorage.getItem id)  
+            else Decode.fromJsonString decoderAnno (Browser.WebStorage.localStorage.getItem id)  
 
         let (AnnotationState: Annotation list, setAnnotationState) = React.useState (initialInteraction "Annotations")
 
         let setLocalStorageAnnotation (id: string)(nextAnnos: Annotation list) =
-            let JSONString = Json.stringify nextAnnos 
-            Browser.WebStorage.localStorage.setItem(id, JSONString)
+            let JSONstring= 
+                // Json.stringify nextAnnos 
+                nextAnnos |> List.map encoderAnno |> Encode.list |> Encode.toJsonString 0
+
+            log JSONstring
+            Browser.WebStorage.localStorage.setItem(id, JSONstring)
 
         let (modalState: ModalInfo, setModal) =
             React.useState(Contextmenu.initialModal)               

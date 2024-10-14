@@ -4,9 +4,30 @@ module Extensions
 open System
 open Fable.Core
 open Fable.Core.JsInterop
+open Types
+open ARCtrl.Json
+open Thoth.Json.Core
 
 let log o = Browser.Dom.console.log o
 
+let encoderAnno (anno: Annotation) =         
+    [
+        Encode.tryInclude "Key" OntologyAnnotation.encoder (anno.Key)
+        Encode.tryInclude "Value" CompositeCell.encoder (anno.Value)
+    ]
+    |> Encode.choose
+    |> Encode.object
+
+let decoderAnno : Decoder<Annotation list> =
+    Decode.list (
+            Decode.object (fun get ->
+            {
+            Key = get.Optional.Field "Key" OntologyAnnotation.decoder 
+            Value = get.Optional.Field "Value" CompositeCell.decoder
+            }
+        )
+    )
+    
 type URL = 
   abstract member createObjectURL: Browser.Types.File -> string
 

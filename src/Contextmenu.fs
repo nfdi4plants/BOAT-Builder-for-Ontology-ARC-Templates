@@ -5,8 +5,8 @@ open Feliz.Bulma
 open Types
 open Browser
 open Browser.Types
-// open ARCtrl
-// open ARCtrl.Json
+open ARCtrl
+
 
 module private Helper =
 
@@ -36,7 +36,7 @@ module private Helper =
         Html.div [ 
             prop.className "border border-slate-400"
             prop.style 
-                [style.margin(2,0); style.width (length.perc 75); style.margin length.auto] 
+                [style.margin(2,0); style.width (length.perc 80); style.margin length.auto; style.margin (length.rem 0)]  
             preventDefault
         ]        
 
@@ -44,11 +44,9 @@ module private Functions =
     let addAnnotationKeyNew (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
-            // let newAnno = {Key = OntologyAnnotation(name = term) |> Some ; Value = None}::state
-            let newAnno = 
-                {Key = term; Value = ""}::state
-            
-            newAnno |> List.rev
+            let newAnno = {Key = OntologyAnnotation(term) |> Some ; Value = None}::state
+
+            newAnno 
             |> fun t ->
             t |> setState
             t |> setLocal "Annotations"
@@ -59,10 +57,8 @@ module private Functions =
     let addAnnotationValueNew (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
-            // let newAnno = {Key = None  ; Value = CompositeCell.createFreeText(term) |> Some }::state
-            let newAnno = 
-                {Key = ""; Value = term }::state
-            newAnno |> List.rev
+            let newAnno = {Key = None  ; Value = CompositeCell.createFreeText(term) |> Some }::state
+            newAnno 
             |> fun t ->
             t |> setState
             t |> setLocal "Annotations"
@@ -76,13 +72,11 @@ module private Functions =
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
             let updatetedAnno = 
-                {state.[state.Length - 1] with Key = term}
-
-            let lastIndex = state.Length - 1
+                {state.[0] with Key = OntologyAnnotation(name = term) |> Some}
 
             let newAnnoList =
                 state
-                |> List.mapi (fun i elem -> if i = lastIndex then updatetedAnno else elem)
+                |> List.mapi (fun i elem -> if i = 0 then updatetedAnno else elem)
 
             newAnnoList
             |> fun t ->
@@ -93,21 +87,16 @@ module private Functions =
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
             let updatetedAnno = 
-                {state.[state.Length - 1] with Value = term}
-
-            let lastIndex = state.Length - 1
+                {state.[0] with Value = CompositeCell.createFreeText(term) |> Some}
 
             let newAnnoList =
                 state
-                |> List.mapi (fun i elem -> if i = lastIndex then updatetedAnno else elem)
+                |> List.mapi (fun i elem -> if i = 0 then updatetedAnno else elem)
 
             newAnnoList
             |> fun t ->
             t |> setState
             t |> setLocal "Annotations"
-        
-
-
 
 open Helper
 
@@ -119,17 +108,14 @@ module Contextmenu =
         let buttonList = [
             button ("Add as new Key", resetter, addAnnotationKeyNew(state, setState, setLocal), [])
             button ("Add as new Value", resetter, addAnnotationValueNew(state, setState, setLocal), []) 
+            divider
             Html.div [ 
-                prop.className "text-gray-500 text-sm p-2"
+                prop.className "text-gray-500 text-sm p-1"
                 prop.text "Add to last annotation .."
-                // prop.style 
-                    // [style.margin(2,0); style.width (length.perc 75); style.margin length.auto] 
                 preventDefault
             ]
-            divider
             button ("as Key", resetter, addToLastAnnoAsKey(state, setState, setLocal),  [])
             button ("as Value", resetter, addToLastAnnoAsValue(state, setState, setLocal),  [])
-            // button ("Jump to top", resetter, scrollToTop,  [])
         ]
         Html.div [
             prop.tabIndex 0

@@ -8,7 +8,7 @@ open Types
 open Fable.SimpleJson
 open Fable.Core.JS
 open System
-// open ARCtrl
+open ARCtrl
 
 module List =
   let rec removeAt index list =
@@ -124,7 +124,7 @@ type Builder =
                                     Bulma.block [
                                         prop.text "Annotations"
                                     ]
-                                    for a in 0 .. (state.Length - 1)  do
+                                    for a in (state |> List.rev)  do
                                         Bulma.block [
                                             prop.className "border border-slate-400 bg-[#ffe699] p-3 text-black w-96 space-y-2"
                                             prop.children [
@@ -132,28 +132,25 @@ type Builder =
                                                 Html.span [
                                                     prop.className "delete float-right mt-0"
                                                     prop.onClick (fun _ -> 
-                                                    let newAnno = List.removeAt a state 
-                                                    newAnno
-                                                    |> fun t ->
-                                                    t |> setState 
-                                                    t |> setLocal "Annotations"
+                                                        let newAnno = state |> List.filter (fun x -> x = a |> not)  
+                                                        // List.removeAt (List.filter (fun x -> x = a) state) state
+                                                        newAnno
+                                                        |> fun t ->
+                                                        t |> setState 
+                                                        t |> setLocal "Annotations"
                                                     )
                                                 ]
-                                                // Option.map (fun e -> e.NameText) |> Option.defaultValue "- "
                                                 Bulma.input.text [
                                                     input.isSmall
-                                                    prop.value state.[a].Key
+                                                    prop.value (a.Key|> Option.map (fun e -> e.Name.Value) |> Option.defaultValue "")
                                                     prop.className ""
-                                                    // prop.onMouseDown (fun _ ->
-                                                    //     setActiveField (Some Key) 
-                                                    // )
-                                                    prop.onChange (fun (x:string) -> 
+                                                    prop.onChange (fun (x: string)-> 
                                                         let updatetedAnno = 
-                                                            {state.[a] with Key = x}
+                                                            {a with Key = OntologyAnnotation(name = x) |> Some}
 
                                                         let newAnnoList =
                                                             state
-                                                            |> List.mapi (fun i elem -> if i = a then updatetedAnno else elem)
+                                                            |> List.map (fun elem -> if elem = a then updatetedAnno else elem)
 
                                                         newAnnoList
                                                         |> fun t ->
@@ -162,21 +159,17 @@ type Builder =
                                                     )
                                                 ]
                                                 Html.p "Value: "
-                                                // |> Option.map (fun e -> e.ToString()) |> Option.defaultValue "-" )
                                                 Bulma.input.text [
                                                     input.isSmall
-                                                    prop.value state.[a].Value
+                                                    prop.value (a.Value|> Option.map (fun e -> e.ToString()) |> Option.defaultValue "" )
                                                     prop.className ""
-                                                    // prop.onMouseDown (fun _ ->
-                                                    //     setActiveField (Some Key) 
-                                                    // )
                                                     prop.onChange (fun (x:string) -> 
                                                         let updatetedAnno = 
-                                                            {state.[a] with Value = x}
+                                                            {a with Value = CompositeCell.createFreeText(x) |> Some}
                                                             
                                                         let newAnnoList =
                                                             state
-                                                            |> List.mapi (fun i elem -> if i = a then updatetedAnno else elem)
+                                                            |> List.map (fun elem -> if elem = a then updatetedAnno else elem)
 
                                                         newAnnoList
                                                         |> fun t ->
@@ -184,16 +177,6 @@ type Builder =
                                                         t |> setLocal "Annotations"
                                                     )
                                                 ]
-                                                // Bulma.block [
-                                                //     prop.className "pt-2 "
-                                                //     prop.children [
-                                                //         Bulma.button.button [
-                                                //             Bulma.button.isSmall
-                                                //             prop.text "ontologize"
-                                                //             prop.className "is-info w-full"
-                                                //         ]
-                                                //     ]
-                                                // ]
                                             ]
                                         ]
                                 ]
