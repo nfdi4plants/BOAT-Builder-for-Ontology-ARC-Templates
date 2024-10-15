@@ -10,17 +10,18 @@ open Thoth.Json.Core
 
 let log o = Browser.Dom.console.log o
 
-let encoderAnno (anno: Annotation) =         
+let encoderAnno (anno: Annotation) = //encodes annotation to json         
     [
         Encode.tryInclude "Key" OntologyAnnotation.encoder (anno.Key)
         Encode.tryInclude "Value" CompositeCell.encoder (anno.Value)
     ]
-    |> Encode.choose
+    |> Encode.choose //only chosse some
     |> Encode.object
 
-let decoderAnno : Decoder<Annotation list> =
+
+let decoderAnno : Decoder<Annotation list> = //decodes json to annotation  
     Decode.list (
-            Decode.object (fun get ->
+        Decode.object (fun get ->
             {
             Key = get.Optional.Field "Key" OntologyAnnotation.decoder 
             Value = get.Optional.Field "Value" CompositeCell.decoder

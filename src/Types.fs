@@ -26,10 +26,6 @@ type DropdownModal = {
     setter: ModalInfo -> unit 
 }
 
-type ActiveField = 
-    |Key
-    |Value
-    |Unset
 
 [<RequireQualifiedAccess>]
 

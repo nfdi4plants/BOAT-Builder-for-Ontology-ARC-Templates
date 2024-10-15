@@ -21,16 +21,25 @@ type Builder =
     [<ReactComponent>]
     static member Main (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit, isLocalStorageClear: string -> unit -> bool) =
 
-        // let annotationToResizeArray = state |> List.map (fun i -> i.Key ) |> List.toArray |> ResizeArray
-
-        // let (keyInput: string, setKeyInput)= React.useState ("")
-        // let (valueInput: string, setValueInput)= React.useState ("")
-
-        let initialInteraction (id: string) =
+        let initialFile (id: string) =
             if isLocalStorageClear id () = true then Unset
             else Json.parseAs<UploadedFile> (Browser.WebStorage.localStorage.getItem id)  
 
-        let filehtml, setFilehtml = React.useState(initialInteraction "file")
+        let filehtml, setFilehtml = React.useState(initialFile "file")
+
+        let setLocalFileName (id: string)(nextNAme: string) =
+            let JSONstring= 
+                Json.stringify nextNAme 
+
+            Browser.WebStorage.localStorage.setItem(id, JSONstring)
+
+        let initialFileName (id: string) =
+            if isLocalStorageClear id () = true then ""
+            else Json.parseAs<string> (Browser.WebStorage.localStorage.getItem id)  
+
+        let fileName, setFileName = React.useState(initialFileName "fileName")
+
+        let (annoCheck: bool, setAnnoCheck) = React.useState(false)
 
         let initialModal = {
             isActive = false
@@ -38,7 +47,7 @@ type Builder =
         }
 
         let modalContext = React.useContext (Contexts.ModalContext.createModalContext)
-        let (activeField: ActiveField option, setActiveField) = React.useState ( Some ActiveField.Unset)
+    
 
         let turnOffContext (event: Browser.Types.Event) = 
             modalContext.setter initialModal 
@@ -54,7 +63,7 @@ type Builder =
                 prop.onClick (fun e -> modalContext.setter initialModal)
                 prop.children [
                     Bulma.column [
-                        column.isOneQuarter
+                        column.isOneFifth
                         prop.className "relative"
                         prop.children [
                             Html.div [
@@ -63,11 +72,9 @@ type Builder =
                                     Bulma.block [
                                         prop.text "Navigation"
                                     ]
+                                    
                                     Bulma.block [
-                                        prop.text "Filename: ExamplePaper.docx" //exchange with uploaded file name
-                                    ]
-                                    Bulma.block [
-                                        Components.UploadDisplay(filehtml,setFilehtml, setState, setLocal)
+                                        Components.UploadDisplay(filehtml,setFilehtml, setState, setLocal, setFileName, setLocalFileName)
                                     ]
                                 ]
                             ]
@@ -76,7 +83,6 @@ type Builder =
                     Bulma.column [
                         column.isHalf
                         prop.children [
-                            
                             Bulma.block [
                                 prop.onContextMenu (fun e ->
                                     let term = window.getSelection().ToString().Trim() 
@@ -91,8 +97,14 @@ type Builder =
                                     e.preventDefault()
                                 )
                                 prop.children [
+                                    match filehtml with
+                                    | Unset -> ()
+                                    | Docx filehtml->
+                                        Bulma.block [
+                                            prop.text fileName
+                                        ]
                                     Html.div [
-                                        prop.className "field pt-1"
+                                        // prop.className "field"
                                         prop.children [
                                             match filehtml with
                                             | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
@@ -110,11 +122,9 @@ type Builder =
                                 //     // ]
                                 ]
                             ]
-                            //exchange with uploaded string list, parsed from uploaded protocol
                         ]
                     ]
                     Bulma.column [
-                        column.isOneQuarter
                         prop.className "relative"
                         prop.children [
                             Html.div [
@@ -124,61 +134,96 @@ type Builder =
                                     Bulma.block [
                                         prop.text "Annotations"
                                     ]
-                                    for a in (state |> List.rev)  do
-                                        Bulma.block [
-                                            prop.className "border border-slate-400 bg-[#ffe699] p-3 text-black w-96 space-y-2"
-                                            prop.children [
-                                                Html.span "Key: "
-                                                Html.span [
-                                                    prop.className "delete float-right mt-0"
-                                                    prop.onClick (fun _ -> 
-                                                        let newAnno = state |> List.filter (fun x -> x = a |> not)  
-                                                        // List.removeAt (List.filter (fun x -> x = a) state) state
-                                                        newAnno
-                                                        |> fun t ->
-                                                        t |> setState 
-                                                        t |> setLocal "Annotations"
-                                                    )
+                                    Html.div [
+                                        prop.className "overflow-x-hidden overflow-y-auto h-[49rem] pr-4"
+                                        prop.children [
+                                        for a in (state |> List.rev)  do
+                                            if annoCheck = false then 
+                                                Bulma.block [
+                                                    Html.button [
+                                                        Html.i [
+                                                            prop.className "fa-solid fa-comment-dots"
+                                                            prop.onClick (fun e -> setAnnoCheck true)
+                                                        ]
+                                                    ]    
                                                 ]
-                                                Bulma.input.text [
-                                                    input.isSmall
-                                                    prop.value (a.Key|> Option.map (fun e -> e.Name.Value) |> Option.defaultValue "")
-                                                    prop.className ""
-                                                    prop.onChange (fun (x: string)-> 
-                                                        let updatetedAnno = 
-                                                            {a with Key = OntologyAnnotation(name = x) |> Some}
+                                            else //if true
+                                                Bulma.block [
+                                                    prop.className "bg-[#ffe699] p-3 text-black w-96"
+                                                    prop.children [
+                                                        Bulma.columns [
+                                                            Bulma.column [
+                                                                column.is1
+                                                                prop.className "hover:bg-[#ffd966] cursor-pointer"
+                                                                prop.onClick (fun e -> setAnnoCheck false)
+                                                                prop.children [
+                                                                    Html.span [
+                                                                        Html.i [
+                                                                            prop.className "fa-solid fa-chevron-left"
+                                                                        ]
+                                                                    ]
+                                                                ]
+                                                                
+                                                            ]
+                                                            Bulma.column [
+                                                                prop.className "space-y-2"
+                                                                prop.children [
+                                                                    Html.span "Key: "
+                                                                    Html.span [
+                                                                        prop.className "delete float-right mt-0"
+                                                                        prop.onClick (fun _ -> 
+                                                                            let newAnno = state |> List.filter (fun x -> x = a |> not)  
+                                                                            // List.removeAt (List.filter (fun x -> x = a) state) state
+                                                                            newAnno
+                                                                            |> fun t ->
+                                                                            t |> setState 
+                                                                            t |> setLocal "Annotations"
+                                                                        )
+                                                                    ]
+                                                                    Bulma.input.text [
+                                                                        input.isSmall
+                                                                        prop.value (a.Key|> Option.map (fun e -> e.Name.Value) |> Option.defaultValue "")
+                                                                        prop.className ""
+                                                                        prop.onChange (fun (x: string)-> 
+                                                                            let updatetedAnno = 
+                                                                                {a with Key = OntologyAnnotation(name = x) |> Some}
 
-                                                        let newAnnoList =
-                                                            state
-                                                            |> List.map (fun elem -> if elem = a then updatetedAnno else elem)
+                                                                            let newAnnoList =
+                                                                                state
+                                                                                |> List.map (fun elem -> if elem = a then updatetedAnno else elem)
 
-                                                        newAnnoList
-                                                        |> fun t ->
-                                                        t |> setState
-                                                        t |> setLocal "Annotations"
-                                                    )
+                                                                            newAnnoList
+                                                                            |> fun t ->
+                                                                            t |> setState
+                                                                            t |> setLocal "Annotations"
+                                                                        )
+                                                                    ]
+                                                                    Html.p "Value: "
+                                                                    Bulma.input.text [
+                                                                        input.isSmall
+                                                                        prop.value (a.Value|> Option.map (fun e -> e.ToString()) |> Option.defaultValue "" )
+                                                                        prop.className ""
+                                                                        prop.onChange (fun (x:string) -> 
+                                                                            let updatetedAnno = 
+                                                                                {a with Value = CompositeCell.createFreeText(x) |> Some}
+                                                                                
+                                                                            let newAnnoList =
+                                                                                state
+                                                                                |> List.map (fun elem -> if elem = a then updatetedAnno else elem)
+
+                                                                            newAnnoList
+                                                                            |> fun t ->
+                                                                            t |> setState
+                                                                            t |> setLocal "Annotations"
+                                                                        )
+                                                                    ]
+                                                                ]
+                                                            ]
+                                                        ]
+                                                    ]  
                                                 ]
-                                                Html.p "Value: "
-                                                Bulma.input.text [
-                                                    input.isSmall
-                                                    prop.value (a.Value|> Option.map (fun e -> e.ToString()) |> Option.defaultValue "" )
-                                                    prop.className ""
-                                                    prop.onChange (fun (x:string) -> 
-                                                        let updatetedAnno = 
-                                                            {a with Value = CompositeCell.createFreeText(x) |> Some}
-                                                            
-                                                        let newAnnoList =
-                                                            state
-                                                            |> List.map (fun elem -> if elem = a then updatetedAnno else elem)
-
-                                                        newAnnoList
-                                                        |> fun t ->
-                                                        t |> setState
-                                                        t |> setLocal "Annotations"
-                                                    )
-                                                ]
-                                            ]
                                         ]
+                                    ]
                                 ]
                             ]
                         ]

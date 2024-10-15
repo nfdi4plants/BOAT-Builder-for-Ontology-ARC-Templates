@@ -81,7 +81,7 @@ type Components =
         ]
       ]
 
-    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml (setLocalFile: string -> UploadedFile -> unit) setState setLocal =
+    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setLocal setFileName setLocalFileName=
       Html.div [
         Bulma.block [
           Html.div [
@@ -135,6 +135,11 @@ type Components =
                               FileReaderHelper.readFromFile f setFilehtml uploadFileType setLocalFile
                               if ref.current.IsSome then
                                 ref.current.Value.value <- null
+
+                              f.name
+                              |> fun t ->
+                              t |> setFileName
+                              t |> setLocalFileName "fileName"
                             )
                           ]
                           Html.span [
@@ -181,7 +186,12 @@ type Components =
                   []
                   |> fun t ->
                   t |> setState
-                  t |> setLocal "Annotations"                          
+                  t |> setLocal "Annotations"  
+
+                  ""   
+                  |> fun t ->
+                  t |> setFileName
+                  t |> setLocalFileName "fileName"                     
                 )
               ]
             ]
@@ -195,7 +205,7 @@ type Components =
     /// A stateful React component that maintains a counter
     /// </summary>
     [<ReactComponent>]
-    static member UploadDisplay(filehtml, setFilehtml, setState, setLocal) =
+    static member UploadDisplay(filehtml, setFilehtml, setState, setLocal, setFileName, setLocalFileName) =
     
         let uploadFileType, setUploadFileType = React.useState(UploadFileType.Docx)
 
@@ -210,7 +220,7 @@ type Components =
               Html.div [
                   prop.className "container"
                   prop.children [
-                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setLocal
+                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setLocal setFileName setLocalFileName
                   ]
               ]
           ]
