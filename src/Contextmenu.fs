@@ -54,6 +54,8 @@ module private Functions =
             ()
         Browser.Dom.window.getSelection().removeAllRanges()  
 
+        
+
     let addAnnotationValueNew (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
@@ -82,6 +84,8 @@ module private Functions =
             |> fun t ->
             t |> setState
             t |> setLocal "Annotations"
+
+            
 
     let addToLastAnnoAsValue(state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) () =
         let term = window.getSelection().ToString().Trim()
