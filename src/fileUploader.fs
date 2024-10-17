@@ -81,7 +81,7 @@ type Components =
         ]
       ]
 
-    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setLocal setFileName setLocalFileName=
+    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setFileName setLocalFileName=
       Html.div [
         Bulma.block [
           Html.div [
@@ -186,7 +186,6 @@ type Components =
                   []
                   |> fun t ->
                   t |> setState
-                  t |> setLocal "Annotations"  
 
                   ""   
                   |> fun t ->
@@ -205,7 +204,7 @@ type Components =
     /// A stateful React component that maintains a counter
     /// </summary>
     [<ReactComponent>]
-    static member UploadDisplay(filehtml, setFilehtml, setState, setLocal, setFileName, setLocalFileName) =
+    static member UploadDisplay(filehtml, setFilehtml, setState, setFileName, setLocalFileName) =
     
         let uploadFileType, setUploadFileType = React.useState(UploadFileType.Docx)
 
@@ -220,7 +219,7 @@ type Components =
               Html.div [
                   prop.className "container"
                   prop.children [
-                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setLocal setFileName setLocalFileName
+                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setFileName setLocalFileName
                   ]
               ]
           ]

@@ -6,16 +6,20 @@ type Protocoltext = {
     Content: string list
 }
 
-type Annotation = {
-    Key: OntologyAnnotation option
-    Value: CompositeCell option
-    
-}
-
-// type Annotation = {
-//     Key: string
-//     Value: string
-// }
+type Annotation = 
+    {
+        Key: OntologyAnnotation option
+        Value: CompositeCell option
+        IsOpen: bool 
+    } 
+    static member init (?key,?value,?isOpen) = 
+        let isOpen = defaultArg isOpen true
+        {
+            Key= key
+            Value= value
+            IsOpen= isOpen
+        }
+    member this.ToggleOpen () = {this with IsOpen = not this.IsOpen}
 
 type ModalInfo = {
     isActive: bool

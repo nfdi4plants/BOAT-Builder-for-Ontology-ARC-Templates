@@ -41,36 +41,29 @@ module private Helper =
         ]        
 
 module private Functions =
-    let addAnnotationKeyNew (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
+    let addAnnotationKeyNew (state: Annotation list, setState: Annotation list -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
-            let newAnno = {Key = OntologyAnnotation(term) |> Some ; Value = None}::state
-
-            newAnno 
-            |> fun t ->
-            t |> setState
-            t |> setLocal "Annotations"
+            let newAnnoList = Annotation.init(OntologyAnnotation(term))::state
+            setState newAnnoList
         else 
             ()
         Browser.Dom.window.getSelection().removeAllRanges()  
 
         
 
-    let addAnnotationValueNew (state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) ()=        
+    let addAnnotationValueNew (state: Annotation list, setState: Annotation list -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
-            let newAnno = {Key = None  ; Value = CompositeCell.createFreeText(term) |> Some }::state
-            newAnno 
-            |> fun t ->
-            t |> setState
-            t |> setLocal "Annotations"
+            let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term))::state
+            setState newAnnoList
         else 
             ()
         Browser.Dom.window.getSelection().removeAllRanges()   
 
     let propPlaceHolder() =  () //replace with other functions
 
-    let addToLastAnnoAsKey(state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) () =
+    let addToLastAnnoAsKey(state: Annotation list, setState: Annotation list -> unit) () =
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
             let updatetedAnno = 
@@ -80,14 +73,11 @@ module private Functions =
                 state
                 |> List.mapi (fun i elem -> if i = 0 then updatetedAnno else elem)
 
-            newAnnoList
-            |> fun t ->
-            t |> setState
-            t |> setLocal "Annotations"
+            setState newAnnoList
 
             
 
-    let addToLastAnnoAsValue(state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) () =
+    let addToLastAnnoAsValue(state: Annotation list, setState: Annotation list -> unit) () =
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
             let updatetedAnno = 
@@ -97,29 +87,26 @@ module private Functions =
                 state
                 |> List.mapi (fun i elem -> if i = 0 then updatetedAnno else elem)
 
-            newAnnoList
-            |> fun t ->
-            t |> setState
-            t |> setLocal "Annotations"
+            setState newAnnoList
 
 open Helper
 
 open Functions
 
 module Contextmenu =
-    let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit)=
+    let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit)=
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
-            button ("Add as new Key", resetter, addAnnotationKeyNew(state, setState, setLocal), [])
-            button ("Add as new Value", resetter, addAnnotationValueNew(state, setState, setLocal), []) 
+            button ("Add as new Key", resetter, addAnnotationKeyNew(state, setState), [])
+            button ("Add as new Value", resetter, addAnnotationValueNew(state, setState), []) 
             divider
             Html.div [ 
                 prop.className "text-gray-500 text-sm p-1"
                 prop.text "Add to last annotation .."
                 preventDefault
             ]
-            button ("as Key", resetter, addToLastAnnoAsKey(state, setState, setLocal),  [])
-            button ("as Value", resetter, addToLastAnnoAsValue(state, setState, setLocal),  [])
+            button ("as Key", resetter, addToLastAnnoAsKey(state, setState),  [])
+            button ("as Value", resetter, addToLastAnnoAsValue(state, setState),  [])
         ]
         Html.div [
             prop.tabIndex 0
@@ -143,10 +130,10 @@ module Contextmenu =
                 location = (0,0)
             }
 
-    let onContextMenu (modalContext:DropdownModal, state: Annotation list, setState: Annotation list -> unit, setLocal: string -> list<Annotation> -> unit) = 
+    let onContextMenu (modalContext:DropdownModal, state: Annotation list, setState: Annotation list -> unit) = 
         let resetter = fun () -> modalContext.setter initialModal //add actual function
         // let rmv = modalContext.setter initialModal 
-        contextmenu (modalContext.modalState.location) (resetter, state, setState, setLocal)
+        contextmenu (modalContext.modalState.location) (resetter, state, setState)
 
 
 

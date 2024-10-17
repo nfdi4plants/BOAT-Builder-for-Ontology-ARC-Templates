@@ -10,10 +10,20 @@ open Thoth.Json.Core
 
 let log o = Browser.Dom.console.log o
 
+module Jsonkeys = 
+    [<Literal>]
+    let Key = "key"
+    [<Literal>]
+    let Value = "value"
+    [<Literal>]
+    let IsOpen = "isOpen"
+    
+
 let encoderAnno (anno: Annotation) = //encodes annotation to json         
     [
-        Encode.tryInclude "Key" OntologyAnnotation.encoder (anno.Key)
-        Encode.tryInclude "Value" CompositeCell.encoder (anno.Value)
+        Encode.tryInclude Jsonkeys.Key OntologyAnnotation.encoder (anno.Key)
+        Encode.tryInclude Jsonkeys.Value CompositeCell.encoder (anno.Value)
+        Encode.tryInclude Jsonkeys.IsOpen Encode.bool (Some anno.IsOpen)
     ]
     |> Encode.choose //only chosse some
     |> Encode.object
@@ -23,8 +33,9 @@ let decoderAnno : Decoder<Annotation list> = //decodes json to annotation
     Decode.list (
         Decode.object (fun get ->
             {
-            Key = get.Optional.Field "Key" OntologyAnnotation.decoder 
-            Value = get.Optional.Field "Value" CompositeCell.decoder
+            Key = get.Optional.Field Jsonkeys.Key OntologyAnnotation.decoder 
+            Value = get.Optional.Field Jsonkeys.Value CompositeCell.decoder
+            IsOpen = get.Required.Field Jsonkeys.IsOpen Decode.bool
             }
         )
     )
