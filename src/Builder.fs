@@ -26,11 +26,6 @@ type BOATelement =
         let revIndex = annoState.Length - 1 - index
         let a = annoState.[revIndex]
 
-        // let key = $"{index}-{a.Key.ToString()}-{a.Value.ToString()}"
-
-        // let initialAnnoCheck = //open last one automatically
-        //     if a = annoState.Head then true
-        //     else false
         let updateAnnotation (func:Annotation -> Annotation) =
             let nextA = func a
             annoState |> List.mapi (fun i a ->
@@ -138,8 +133,6 @@ type Builder =
 
         let fileName, setFileName = React.useState(initialFileName "fileName")
 
-        
-
         let initialModal = {
             isActive = false
             location = (0,0)
@@ -156,83 +149,80 @@ type Builder =
             {new IDisposable with member this.Dispose() = window.removeEventListener ("resize", turnOffContext) }    
         )
  
-        Html.div [
-            Bulma.columns [
-                prop.className "z-0 py-5 px-5 text-white"
-                prop.onClick (fun e -> modalContext.setter initialModal)
-                prop.children [
-                    Bulma.column [
-                        column.isOneFifth
-                        prop.className "relative"
-                        prop.children [
-                            Html.div [
-                                prop.className "fixed select-none"
-                                prop.children [
-                                    Bulma.block [
-                                        prop.text "Navigation"
-                                    ]
-                                    
-                                    Bulma.block [
-                                        Components.UploadDisplay(filehtml,setFilehtml, setState, setFileName, setLocalFileName)
-                                    ]
+        Bulma.columns [
+            prop.className "z-0 py-5 px-5 text-white"
+            prop.onClick (fun e -> modalContext.setter initialModal)
+            prop.children [
+                Bulma.column [
+                    column.isOneFifth
+                    prop.className "relative"
+                    prop.children [
+                        Html.div [
+                            prop.className "fixed select-none"
+                            prop.children [
+                                Bulma.block [
+                                    prop.text "Navigation"
+                                ]
+                                Bulma.block [
+                                    Components.UploadDisplay(filehtml,setFilehtml, setState, setFileName, setLocalFileName)
                                 ]
                             ]
                         ]
                     ]
-                    Bulma.column [
-                        column.isHalf
-                        prop.children [
-                            Bulma.block [
-                                prop.onContextMenu (fun e ->
-                                    let term = window.getSelection().ToString().Trim() 
-                                    if term.Length <> 0 then 
-                                        modalContext.setter {
-                                            isActive = true;
-                                            location = int e.pageX, int e.pageY
-                                        }
-                                    else 
-                                        ()
-                                    e.stopPropagation()
-                                    e.preventDefault()
-                                )
-                                prop.children [
-                                    match filehtml with
-                                    | Unset -> ()
-                                    | Docx filehtml->
-                                        Bulma.block [
-                                            prop.text fileName
-                                        ]
-                                    Html.div [
-                                        // prop.className "field"
+                ]
+                Bulma.column [
+                    column.isHalf
+                    prop.children [
+                        Bulma.block [
+                            prop.onContextMenu (fun e ->
+                                let term = window.getSelection().ToString().Trim() 
+                                if term.Length <> 0 then 
+                                    modalContext.setter {
+                                        isActive = true;
+                                        location = int e.pageX, int e.pageY
+                                    }
+                                else 
+                                    ()
+                                e.stopPropagation()
+                                e.preventDefault()
+                            )
+                            prop.children [
+                                match filehtml with
+                                | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
+                                | Docx filehtml ->
+
+                                    Bulma.block [
+                                        prop.text fileName
+                                        prop.className "bg-[#183641] select-none"
+                                    ]
+
+                                    Bulma.block [
                                         prop.children [
-                                            match filehtml with
-                                            | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
-                                            | Docx filehtml ->
-                                                Components.DisplayHtml(filehtml)
-                                            // | PDF pdfSource ->
-                                            //   Components.DisplayPDF(pdfSource, modalContext)
+                                        // prop.className "pt-10"
+                                            Components.DisplayHtml(filehtml)
                                         ]
                                     ]
-                                ]
+                                // | PDF pdfSource ->
+                                //   Components.DisplayPDF(pdfSource, modalContext)
                             ]
                         ]
                     ]
-                    Bulma.column [
-                        prop.className "relative"
-                        prop.children [
-                            Html.div [
-                                prop.className "fixed select-none "
-                                if filehtml = Unset then prop.hidden (true)
-                                prop.children [
-                                    Bulma.block [
-                                        prop.text "Annotations"
-                                    ]
-                                    Html.div [
-                                        prop.className "overflow-x-hidden overflow-y-auto h-[49rem] pr-4"
-                                        prop.children [
-                                        for a in 0 .. annoState.Length - 1 do
-                                            BOATelement.annoBlock (annoState, setState, a)
-                                        ]
+                ]
+                Bulma.column [
+                    prop.className "relative"
+                    prop.children [
+                        Html.div [
+                            prop.className "fixed select-none "
+                            if filehtml = Unset then prop.hidden (true)
+                            prop.children [
+                                Bulma.block [
+                                    prop.text "Annotations"
+                                ]
+                                Html.div [
+                                    prop.className "overflow-x-hidden overflow-y-auto h-[49rem] pr-4"
+                                    prop.children [
+                                    for a in 0 .. annoState.Length - 1 do
+                                        BOATelement.annoBlock (annoState, setState, a)
                                     ]
                                 ]
                             ]
@@ -241,6 +231,7 @@ type Builder =
                 ]
             ]
         ]
+        
         
         
 
