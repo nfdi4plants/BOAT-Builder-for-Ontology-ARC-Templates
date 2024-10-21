@@ -44,7 +44,7 @@ module private FileReaderHelper =
 type Components =
     static member DisplayHtml(htmlString: string) = 
       Html.div [       
-        prop.className "prose lg:prose-xl bg-slate-100 p-3 text-black max-w-max"
+        prop.className "prose lg:prose-xl bg-slate-100 p-3 text-black max-w-4xl"
         prop.children [
           Html.div [
             prop.innerHtml htmlString

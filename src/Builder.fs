@@ -170,10 +170,49 @@ type Builder =
                         ]
                     ]
                 ]
+                // Bulma.column [
+                //     column.isHalf
+                //     prop.children [
+                //         Bulma.block [
+                //             prop.onContextMenu (fun e ->
+                //                 let term = window.getSelection().ToString().Trim() 
+                //                 if term.Length <> 0 then 
+                //                     modalContext.setter {
+                //                         isActive = true;
+                //                         location = int e.pageX, int e.pageY
+                //                     }
+                //                 else 
+                //                     ()
+                //                 e.stopPropagation()
+                //                 e.preventDefault()
+                //             )
+                //             prop.children [
+                //                 match filehtml with
+                //                 | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
+                //                 | Docx filehtml ->
+                //                     Bulma.block [
+                //                         prop.text fileName
+                //                         prop.className " bg-[#183641] select-none"
+                //                     ]
+
+                //                     Bulma.block [
+                //                         prop.children [
+                //                         // prop.className "pt-10"
+                //                             Components.DisplayHtml(filehtml)
+                //                         ]
+                //                     ]
+                //                 // | PDF pdfSource ->
+                //                 //   Components.DisplayPDF(pdfSource, modalContext)
+                //             ]
+                //         ]
+                //     ]
+                // ]
                 Bulma.column [
                     column.isHalf
+                    prop.className "relative"
                     prop.children [
-                        Bulma.block [
+                        Html.div [
+                            prop.className "fixed"
                             prop.onContextMenu (fun e ->
                                 let term = window.getSelection().ToString().Trim() 
                                 if term.Length <> 0 then 
@@ -190,20 +229,18 @@ type Builder =
                                 match filehtml with
                                 | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
                                 | Docx filehtml ->
-
                                     Bulma.block [
                                         prop.text fileName
-                                        prop.className "bg-[#183641] select-none"
                                     ]
-
                                     Bulma.block [
+                                        prop.className "overflow-x-hidden overflow-y-auto h-[52rem]"
                                         prop.children [
                                         // prop.className "pt-10"
                                             Components.DisplayHtml(filehtml)
                                         ]
                                     ]
-                                // | PDF pdfSource ->
-                                //   Components.DisplayPDF(pdfSource, modalContext)
+                            // | PDF pdfSource ->
+                            //   Components.DisplayPDF(pdfSource, modalContext)
                             ]
                         ]
                     ]
