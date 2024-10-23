@@ -41,13 +41,39 @@ module private FileReaderHelper =
     | UploadFileType.Docx -> readDocx file setState setLocalFile
     // | UploadFileType.PDF -> readPdf file setState
 
+module Highlight =
+
+  let keyList(annoList: Annotation list) = 
+    [
+        for a in annoList do
+            yield! (a.Key |> Option.map (fun e -> e.Name.Value)|> Option.defaultValue "").Split([|' '|])
+    ]
+  let valuelist(annoList: Annotation list) = 
+    [
+        for a in annoList do
+            yield! (a.Value |> Option.map (fun e -> e.ToString()) |> Option.defaultValue "" ).Split([|' '|])
+    ]
+
+  let highlightAnnos(text: string, values: string list,  keys: string list) =
+    // Replace all occurrences of the word with the word wrapped in <mark> tags
+    let highlightkey =
+      keys |> List.fold (fun (acc: string) key -> 
+        acc.Replace(key, $"<mark>{key}</mark>")
+      ) text
+
+    values |> List.fold (fun (acc: string) value -> 
+        acc.Replace(value, $"<mark>{value}</mark>")
+      ) highlightkey
+
+
 type Components =
-    static member DisplayHtml(htmlString: string) = 
+    static member DisplayHtml(htmlString: string, annoList: Annotation list) = 
       Html.div [       
         prop.className "prose lg:prose-xl bg-slate-100 p-3 text-black max-w-4xl"
         prop.children [
           Html.div [
-            prop.innerHtml htmlString
+            prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList), Highlight.valuelist (annoList)))
+            
           ]
         ]
       ]
@@ -183,9 +209,7 @@ type Components =
                   t |> setFilehtml
                   t |> setLocalFile "file"
 
-                  []
-                  |> fun t ->
-                  t |> setState
+                  [] |> setState
 
                   ""   
                   |> fun t ->

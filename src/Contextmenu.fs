@@ -16,14 +16,16 @@ module private Helper =
             e.preventDefault()
         ) 
 
-    let button (name:string, resetter: unit -> unit, func: unit -> unit, props) =
+
+
+    let button (name:string, resetter: unit -> unit, state, func: unit -> unit, props) =
         Html.li [
             Html.div [
                 prop.className "hover:bg-[#a7d9ec] justify-between text-sm text-black select-none p-2"
                 prop.onMouseDown (fun e -> 
-                    console.log "clicked"
                     func()
                     resetter()
+                    
                     ()
                 )   
                 preventDefault
@@ -57,6 +59,7 @@ module private Functions =
         if term.Length <> 0 then 
             let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term))::state
             setState newAnnoList
+            
         else 
             ()
         Browser.Dom.window.getSelection().removeAllRanges()   
@@ -97,16 +100,16 @@ module Contextmenu =
     let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit)=
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
-            button ("Add as new Key", resetter, addAnnotationKeyNew(state, setState), [])
-            button ("Add as new Value", resetter, addAnnotationValueNew(state, setState), []) 
+            button ("Add as new Key", resetter, state, addAnnotationKeyNew(state, setState), [])
+            button ("Add as new Value", resetter,state, addAnnotationValueNew(state, setState), []) 
             divider
             Html.div [ 
                 prop.className "text-gray-500 text-sm p-1"
                 prop.text "Add to last annotation .."
                 preventDefault
             ]
-            button ("as Key", resetter, addToLastAnnoAsKey(state, setState),  [])
-            button ("as Value", resetter, addToLastAnnoAsValue(state, setState),  [])
+            button ("as Key", resetter,state, addToLastAnnoAsKey(state, setState),  [])
+            button ("as Value", resetter,state, addToLastAnnoAsValue(state, setState),  [])
         ]
         Html.div [
             prop.tabIndex 0

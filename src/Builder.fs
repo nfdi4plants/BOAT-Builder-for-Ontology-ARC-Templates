@@ -108,7 +108,6 @@ type BOATelement =
                     ]  
                 ]
         ]
-    
 
 
 type Builder =
@@ -138,8 +137,7 @@ type Builder =
             location = (0,0)
         }
 
-        let modalContext = React.useContext (Contexts.ModalContext.createModalContext)
-    
+        let modalContext = React.useContext (Contexts.ModalContext.createModalContext)    
 
         let turnOffContext (event: Browser.Types.Event) = 
             modalContext.setter initialModal 
@@ -222,7 +220,7 @@ type Builder =
                                     }
                                 else 
                                     ()
-                                e.stopPropagation()
+                                e.stopPropagation() 
                                 e.preventDefault()
                             )
                             prop.children [
@@ -236,7 +234,7 @@ type Builder =
                                         prop.className "overflow-x-hidden overflow-y-auto h-[52rem]"
                                         prop.children [
                                         // prop.className "pt-10"
-                                            Components.DisplayHtml(filehtml)
+                                            Components.DisplayHtml(filehtml, annoState)
                                         ]
                                     ]
                             // | PDF pdfSource ->

@@ -28,7 +28,7 @@ type View =
                 // Json.stringify nextAnnos 
                 nextAnnos |> List.map encoderAnno |> Encode.list |> Encode.toJsonString 0
 
-            log JSONstring
+            // log JSONstring
             Browser.WebStorage.localStorage.setItem(id, JSONstring)
 
         let setState(state: Annotation list) =
