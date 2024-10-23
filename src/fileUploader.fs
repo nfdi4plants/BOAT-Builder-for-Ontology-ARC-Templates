@@ -57,13 +57,11 @@ module Highlight =
   let highlightAnnos(text: string, values: string list,  keys: string list) =
     // Replace all occurrences of the word with the word wrapped in <mark> tags
     let highlightkey =
-      keys |> List.fold (fun (acc: string) key -> 
+      keys |> List.fold (fun (acc: string) key-> 
         acc.Replace(key, $"<mark>{key}</mark>")
       ) text
+    highlightkey
 
-    values |> List.fold (fun (acc: string) value -> 
-        acc.Replace(value, $"<mark>{value}</mark>")
-      ) highlightkey
 
 
 type Components =
@@ -72,7 +70,7 @@ type Components =
         prop.className "prose lg:prose-xl bg-slate-100 p-3 text-black max-w-4xl"
         prop.children [
           Html.div [
-            prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList), Highlight.valuelist (annoList)))
+            prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.valuelist (annoList),Highlight.keyList (annoList)))
             
           ]
         ]
