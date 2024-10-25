@@ -56,25 +56,20 @@ module Highlight =
 
   let highlightAnnos(text: string, values: string list,  keys: string list) =
     // Replace all occurrences of the word with the word wrapped in <mark> tags
-    let highlightkey =
       keys |> List.fold (fun (acc: string) key-> 
         acc.Replace(key, $"<mark>{key}</mark>")
       ) text
-    highlightkey
+
 
 
 
 type Components =
     static member DisplayHtml(htmlString: string, annoList: Annotation list) = 
-      Html.div [       
-        prop.className "prose lg:prose-xl bg-slate-100 p-3 text-black max-w-4xl"
-        prop.children [
-          Html.div [
+      Html.div [    
             prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.valuelist (annoList),Highlight.keyList (annoList)))
-            
-          ]
-        ]
+            prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"           
       ]
+
 
     /// https://stackoverflow.com/a/60539836/12858021
     static member DisplayPDF(pdfSource: string, modalContext: DropdownModal) =

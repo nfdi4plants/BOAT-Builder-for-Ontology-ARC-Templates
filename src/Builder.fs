@@ -205,12 +205,54 @@ type Builder =
                 //         ]
                 //     ]
                 // ]
+                // Bulma.column [
+                //     column.isHalf
+                //     prop.className "relative"
+                //     prop.children [
+                //         Html.div [
+                //             prop.className "fixed"
+                            // prop.onContextMenu (fun e ->
+                            //     let term = window.getSelection().ToString().Trim() 
+                            //     if term.Length <> 0 then 
+                            //         modalContext.setter {
+                            //             isActive = true;
+                            //             location = int e.pageX, int e.pageY
+                            //         }
+                            //     else 
+                            //         ()
+                            //     e.stopPropagation() 
+                            //     e.preventDefault()
+                            // )
+                //             prop.children [
+                //                 match filehtml with
+                //                 | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
+                //                 | Docx filehtml ->
+                //                     Bulma.block [
+                //                         prop.text fileName
+                //                     ]
+                //                     Bulma.block [
+                //                         prop.className "overflow-x-hidden overflow-y-auto h-[52rem]"
+                //                         prop.children [
+                //                         // prop.className "pt-10"
+                //                             Components.DisplayHtml(filehtml, annoState)
+                //                         ]
+                //                     ]
+                //             // | PDF pdfSource ->
+                //             //   Components.DisplayPDF(pdfSource, modalContext)
+                //             ]
+                //         ]
+                //     ]
+                // ]
                 Bulma.column [
                     column.isHalf
-                    prop.className "relative"
                     prop.children [
-                        Html.div [
-                            prop.className "fixed"
+                        match filehtml with
+                        | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
+                        | Docx filehtml ->
+                        Bulma.block [
+                            prop.text fileName
+                        ]
+                        Bulma.block [
                             prop.onContextMenu (fun e ->
                                 let term = window.getSelection().ToString().Trim() 
                                 if term.Length <> 0 then 
@@ -223,25 +265,15 @@ type Builder =
                                 e.stopPropagation() 
                                 e.preventDefault()
                             )
+                            prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
                             prop.children [
-                                match filehtml with
-                                | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
-                                | Docx filehtml ->
-                                    Bulma.block [
-                                        prop.text fileName
-                                    ]
-                                    Bulma.block [
-                                        prop.className "overflow-x-hidden overflow-y-auto h-[52rem]"
-                                        prop.children [
-                                        // prop.className "pt-10"
-                                            Components.DisplayHtml(filehtml, annoState)
-                                        ]
-                                    ]
-                            // | PDF pdfSource ->
-                            //   Components.DisplayPDF(pdfSource, modalContext)
+                                Components.DisplayHtml(filehtml, annoState)
                             ]
                         ]
                     ]
+                    // Bulma.block [
+                    //     prop.text fileName
+                    // ]
                 ]
                 Bulma.column [
                     prop.className "relative"
@@ -254,7 +286,7 @@ type Builder =
                                     prop.text "Annotations"
                                 ]
                                 Html.div [
-                                    prop.className "overflow-x-hidden overflow-y-auto h-[49rem] pr-4"
+                                    prop.className "overflow-x-hidden overflow-y-auto h-[50rem] pr-4"
                                     prop.children [
                                     for a in 0 .. annoState.Length - 1 do
                                         BOATelement.annoBlock (annoState, setState, a)
