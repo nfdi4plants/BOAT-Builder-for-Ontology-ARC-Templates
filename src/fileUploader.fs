@@ -1,10 +1,10 @@
 namespace Components
 
 open Feliz
-open Feliz.Router
 open Types
 open Fable.SimpleJson
 open Feliz.Bulma
+open System.Text.RegularExpressions
 
 
 module private FileReaderHelper =
@@ -46,27 +46,35 @@ module Highlight =
   let keyList(annoList: Annotation list) = 
     [
         for a in annoList do
-            yield! (a.Key |> Option.map (fun e -> e.Name.Value)|> Option.defaultValue "").Split([|' '|])
+            (a.Key |> Option.map (fun e -> e.Name.Value)|> Option.defaultValue "")
     ]
   let valuelist(annoList: Annotation list) = 
     [
         for a in annoList do
-            yield! (a.Value |> Option.map (fun e -> e.ToString()) |> Option.defaultValue "" ).Split([|' '|])
+            (a.Value |> Option.map (fun e -> e.ToString()) |> Option.defaultValue "" )
     ]
 
-  let highlightAnnos(text: string, values: string list,  keys: string list) =
-    // Replace all occurrences of the word with the word wrapped in <mark> tags
-      keys |> List.fold (fun (acc: string) key-> 
-        acc.Replace(key, $"<mark>{key}</mark>")
-      ) text
+  let allList (annoList: Annotation list) =
+    keyList(annoList) @ valuelist(annoList)
 
 
+  let highlightAnnos(text: string, list: string list) =
+      // let keyHighlighttext =
+        List.fold (fun (acc: string) key -> 
+          acc.Replace(key, $"<mark style='background-color: orange'>{key}</mark>")
+        ) text list
+
+        
+
+      // List.fold (fun (acc: string) value -> 
+      //   acc.Replace(value, $"<mark>{value}</mark>")
+      // ) keyHighlighttext values
 
 
 type Components =
     static member DisplayHtml(htmlString: string, annoList: Annotation list) = 
       Html.div [    
-            prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.valuelist (annoList),Highlight.keyList (annoList)))
+            prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList)))
             prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"           
       ]
 
@@ -99,6 +107,7 @@ type Components =
           ]
         ]
       ]
+
 
     static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setFileName setLocalFileName=
       Html.div [

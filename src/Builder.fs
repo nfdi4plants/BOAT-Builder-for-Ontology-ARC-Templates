@@ -40,11 +40,13 @@ type BOATelement =
                         prop.style [style.color "#ffe699"]
                         prop.onClick (fun e -> updateAnnotation (fun a -> a.ToggleOpen()))
                     ]
-                ]    
-            
+                ] 
             else
                 Html.div [
                     prop.className "bg-[#ffe699] p-3 text-black w-96"
+                    prop.style [
+                            style.top modalContext.modalState.location
+                        ]
                     prop.children [
                         Bulma.columns [
                             Bulma.column [
@@ -153,96 +155,16 @@ type Builder =
             prop.children [
                 Bulma.column [
                     column.isOneFifth
-                    prop.className "relative"
                     prop.children [
-                        Html.div [
-                            prop.className "fixed select-none"
-                            prop.children [
-                                Bulma.block [
-                                    prop.text "Navigation"
-                                ]
-                                Bulma.block [
-                                    Components.UploadDisplay(filehtml,setFilehtml, setState, setFileName, setLocalFileName)
-                                ]
-                            ]
+                        Bulma.block [
+                            prop.text "Navigation"
+                        ]
+                        Bulma.block [
+                            Components.UploadDisplay(filehtml,setFilehtml, setState, setFileName, setLocalFileName)
                         ]
                     ]
                 ]
-                // Bulma.column [
-                //     column.isHalf
-                //     prop.children [
-                //         Bulma.block [
-                //             prop.onContextMenu (fun e ->
-                //                 let term = window.getSelection().ToString().Trim() 
-                //                 if term.Length <> 0 then 
-                //                     modalContext.setter {
-                //                         isActive = true;
-                //                         location = int e.pageX, int e.pageY
-                //                     }
-                //                 else 
-                //                     ()
-                //                 e.stopPropagation()
-                //                 e.preventDefault()
-                //             )
-                //             prop.children [
-                //                 match filehtml with
-                //                 | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
-                //                 | Docx filehtml ->
-                //                     Bulma.block [
-                //                         prop.text fileName
-                //                         prop.className " bg-[#183641] select-none"
-                //                     ]
 
-                //                     Bulma.block [
-                //                         prop.children [
-                //                         // prop.className "pt-10"
-                //                             Components.DisplayHtml(filehtml)
-                //                         ]
-                //                     ]
-                //                 // | PDF pdfSource ->
-                //                 //   Components.DisplayPDF(pdfSource, modalContext)
-                //             ]
-                //         ]
-                //     ]
-                // ]
-                // Bulma.column [
-                //     column.isHalf
-                //     prop.className "relative"
-                //     prop.children [
-                //         Html.div [
-                //             prop.className "fixed"
-                            // prop.onContextMenu (fun e ->
-                            //     let term = window.getSelection().ToString().Trim() 
-                            //     if term.Length <> 0 then 
-                            //         modalContext.setter {
-                            //             isActive = true;
-                            //             location = int e.pageX, int e.pageY
-                            //         }
-                            //     else 
-                            //         ()
-                            //     e.stopPropagation() 
-                            //     e.preventDefault()
-                            // )
-                //             prop.children [
-                //                 match filehtml with
-                //                 | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
-                //                 | Docx filehtml ->
-                //                     Bulma.block [
-                //                         prop.text fileName
-                //                     ]
-                //                     Bulma.block [
-                //                         prop.className "overflow-x-hidden overflow-y-auto h-[52rem]"
-                //                         prop.children [
-                //                         // prop.className "pt-10"
-                //                             Components.DisplayHtml(filehtml, annoState)
-                //                         ]
-                //                     ]
-                //             // | PDF pdfSource ->
-                //             //   Components.DisplayPDF(pdfSource, modalContext)
-                //             ]
-                //         ]
-                //     ]
-                // ]
                 Bulma.column [
                     column.isHalf
                     prop.children [
@@ -265,33 +187,26 @@ type Builder =
                                 e.stopPropagation() 
                                 e.preventDefault()
                             )
-                            prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
+                            // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
                             prop.children [
                                 Components.DisplayHtml(filehtml, annoState)
                             ]
                         ]
+                        // | PDF pdfSource ->
+                        //        Components.DisplayPDF(pdfSource, modalContext)
                     ]
-                    // Bulma.block [
-                    //     prop.text fileName
-                    // ]
                 ]
                 Bulma.column [
-                    prop.className "relative"
+                    if filehtml = Unset then prop.hidden (true)
                     prop.children [
+                        Bulma.block [
+                            prop.text "Annotations"
+                        ]
                         Html.div [
-                            prop.className "fixed select-none "
-                            if filehtml = Unset then prop.hidden (true)
+                            // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
                             prop.children [
-                                Bulma.block [
-                                    prop.text "Annotations"
-                                ]
-                                Html.div [
-                                    prop.className "overflow-x-hidden overflow-y-auto h-[50rem] pr-4"
-                                    prop.children [
-                                    for a in 0 .. annoState.Length - 1 do
-                                        BOATelement.annoBlock (annoState, setState, a)
-                                    ]
-                                ]
+                            for a in 0 .. annoState.Length - 1 do
+                                BOATelement.annoBlock (annoState, setState, a)
                             ]
                         ]
                     ]
