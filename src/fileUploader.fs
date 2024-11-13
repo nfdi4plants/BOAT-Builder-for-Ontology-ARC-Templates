@@ -74,7 +74,8 @@ module Highlight =
 type Components =
     static member DisplayHtml(htmlString: string, annoList: Annotation list) = 
       Html.div [    
-            prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList)))
+            // prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList)))
+            prop.innerHtml htmlString
             prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"           
       ]
 

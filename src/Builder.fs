@@ -44,9 +44,6 @@ type BOATelement =
             else
                 Html.div [
                     prop.className "bg-[#ffe699] p-3 text-black w-96"
-                    prop.style [
-                            style.top modalContext.modalState.location
-                        ]
                     prop.children [
                         Bulma.columns [
                             Bulma.column [
@@ -197,12 +194,12 @@ type Builder =
                     ]
                 ]
                 Bulma.column [
-                    if filehtml = Unset then prop.hidden (true)
+                    if filehtml = Unset then prop.hidden true
                     prop.children [
                         Bulma.block [
                             prop.text "Annotations"
                         ]
-                        Html.div [
+                        Bulma.block [
                             // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
                             prop.children [
                             for a in 0 .. annoState.Length - 1 do

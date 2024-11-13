@@ -17,6 +17,8 @@ module Jsonkeys =
     let Value = "value"
     [<Literal>]
     let IsOpen = "isOpen"
+    [<Literal>]
+    let Height = "height"
     
 
 let encoderAnno (anno: Annotation) = //encodes annotation to json         
@@ -24,6 +26,7 @@ let encoderAnno (anno: Annotation) = //encodes annotation to json
         Encode.tryInclude Jsonkeys.Key OntologyAnnotation.encoder (anno.Key)
         Encode.tryInclude Jsonkeys.Value CompositeCell.encoder (anno.Value)
         Encode.tryInclude Jsonkeys.IsOpen Encode.bool (Some anno.IsOpen)
+        Encode.tryInclude Jsonkeys.Height Encode.int (Some anno.Height)
     ]
     |> Encode.choose //only chosse some
     |> Encode.object
@@ -36,6 +39,7 @@ let decoderAnno : Decoder<Annotation list> = //decodes json to annotation
             Key = get.Optional.Field Jsonkeys.Key OntologyAnnotation.decoder 
             Value = get.Optional.Field Jsonkeys.Value CompositeCell.decoder
             IsOpen = get.Required.Field Jsonkeys.IsOpen Decode.bool
+            Height = get.Required.Field Jsonkeys.Height Decode.int
             }
         )
     )
