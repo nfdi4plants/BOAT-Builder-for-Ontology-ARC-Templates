@@ -194,18 +194,20 @@ type Builder =
                     ]
                 ]
                 Bulma.column [
-                    if filehtml = Unset then prop.hidden true
                     prop.children [
-                        Bulma.block [
-                            prop.text "Annotations"
-                        ]
-                        Bulma.block [
-                            // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
-                            prop.children [
-                            for a in 0 .. annoState.Length - 1 do
-                                BOATelement.annoBlock (annoState, setState, a)
+                        if filehtml = Unset then
+                            Html.none
+                        else
+                            Bulma.block [
+                                prop.text "Annotations"
                             ]
-                        ]
+                            Bulma.block [
+                                // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
+                                prop.children [
+                                for a in 0 .. annoState.Length - 1 do
+                                    BOATelement.annoBlock (annoState, setState, a)
+                                ]
+                            ]
                     ]
                 ]
             ]
