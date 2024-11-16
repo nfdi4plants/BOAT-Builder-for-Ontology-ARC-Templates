@@ -33,7 +33,10 @@ type View =
 
         let setState(state: Annotation list) =
             setAnnotationState state
-            setLocalStorageAnnotation "Annotations" state           
+            setLocalStorageAnnotation "Annotations" state    
+
+        let (yCoordinate: float, setYCoordinate) = React.useState(0.0) 
+          
 
         let (modalState: ModalInfo, setModal) =
             React.useState(Contextmenu.initialModal)               

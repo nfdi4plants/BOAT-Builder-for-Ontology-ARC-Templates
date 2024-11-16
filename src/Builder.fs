@@ -36,14 +36,14 @@ type BOATelement =
             if a.IsOpen = false then 
                 Html.button [
                     Html.i [
-                        prop.className "fa-solid fa-comment-dots"
+                        prop.className "fa-solid fa-comment-dots mt-[100px]"
                         prop.style [style.color "#ffe699"]
                         prop.onClick (fun e -> updateAnnotation (fun a -> a.ToggleOpen()))
                     ]
                 ] 
             else
                 Html.div [
-                    prop.className "bg-[#ffe699] p-3 text-black w-96"
+                    prop.className "bg-[#ffe699] p-3 text-black mt-[100px]"
                     prop.children [
                         Bulma.columns [
                             Bulma.column [
@@ -201,13 +201,9 @@ type Builder =
                             Bulma.block [
                                 prop.text "Annotations"
                             ]
-                            Bulma.block [
                                 // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
-                                prop.children [
-                                for a in 0 .. annoState.Length - 1 do
-                                    BOATelement.annoBlock (annoState, setState, a)
-                                ]
-                            ]
+                            for a in 0 .. annoState.Length - 1 do
+                                BOATelement.annoBlock (annoState, setState, a)
                     ]
                 ]
             ]
