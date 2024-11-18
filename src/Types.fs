@@ -11,11 +11,11 @@ type Annotation =
         Key: OntologyAnnotation option
         Value: CompositeCell option
         IsOpen: bool 
-        Height: int
+        Height: float
     } 
     static member init (?key,?value,?isOpen, ?height) = 
         let isOpen = defaultArg isOpen true
-        let height = 0
+        let height = defaultArg height 0.0
         {
             Key= key
             Value= value

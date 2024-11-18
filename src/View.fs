@@ -35,7 +35,7 @@ type View =
             setAnnotationState state
             setLocalStorageAnnotation "Annotations" state    
 
-        let (yCoordinate: float, setYCoordinate) = React.useState(0.0) 
+        
           
 
         let (modalState: ModalInfo, setModal) =

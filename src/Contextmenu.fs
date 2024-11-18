@@ -43,24 +43,54 @@ module private Helper =
         ]        
 
 module private Functions =
+
     let addAnnotationKeyNew (state: Annotation list, setState: Annotation list -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
+        let yCoordinateOfSelection  =
+            match window.getSelection() with
+            | (selection: Selection) when selection.rangeCount > 0 ->
+                // Get the range of the selected text
+                let range = selection.getRangeAt(0)
+                // Get the bounding rectangle of the selected range
+                let rect = range.getBoundingClientRect()
+                // Return the Y coordinate relative to the viewport
+                rect.top + window.scrollY
+            | _ -> 0.0
+
         if term.Length <> 0 then 
-            let newAnnoList = Annotation.init(OntologyAnnotation(term))::state
+            let newAnnoList = Annotation.init(OntologyAnnotation(term), height = yCoordinateOfSelection)::state
             setState newAnnoList
+
         else 
             ()
+
+        log yCoordinateOfSelection
+            
         Browser.Dom.window.getSelection().removeAllRanges()  
 
         
     let addAnnotationValueNew (state: Annotation list, setState: Annotation list -> unit) ()=        
         let term = window.getSelection().ToString().Trim()
+        let yCoordinateOfSelection  =
+            match window.getSelection() with
+            | (selection: Selection) when selection.rangeCount > 0 ->
+                // Get the range of the selected text
+                let range = selection.getRangeAt(0)
+                // Get the bounding rectangle of the selected range
+                let rect = range.getBoundingClientRect()
+                // Return the Y coordinate relative to the viewport
+                rect.top
+            | _ -> 0.0
+
         if term.Length <> 0 then 
-            let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term))::state
+            let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term), height = yCoordinateOfSelection)::state
             setState newAnnoList
             
         else 
             ()
+
+        log yCoordinateOfSelection
+
         Browser.Dom.window.getSelection().removeAllRanges()   
 
     let propPlaceHolder() =  () //replace with other functions
