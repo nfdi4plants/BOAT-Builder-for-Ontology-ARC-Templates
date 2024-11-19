@@ -49,13 +49,15 @@ module private Functions =
         let yCoordinateOfSelection  =
             match window.getSelection() with
             | (selection: Selection) when selection.rangeCount > 0 ->
-                // Get the range of the selected text
                 let range = selection.getRangeAt(0)
-                // Get the bounding rectangle of the selected range
                 let rect = range.getBoundingClientRect()
-                // Return the Y coordinate relative to the viewport
-                rect.top + window.scrollY
+
+                rect.top 
             | _ -> 0.0
+
+            // let parentPos = document.getElementById("main-parent").getBoundingClientRect()
+            // let childPos = document.getElementById("annoBlock").getBoundingClientRect()
+            // childPos.top - parentPos.top
 
         if term.Length <> 0 then 
             let newAnnoList = Annotation.init(OntologyAnnotation(term), height = yCoordinateOfSelection)::state

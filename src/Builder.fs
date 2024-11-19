@@ -19,7 +19,6 @@ module List =
 
 // module Helperfunctions =
     
-
 type BOATelement =
     static member annoBlock (annoState: Annotation list, setState: Annotation list -> unit, index: int) =
 
@@ -32,10 +31,11 @@ type BOATelement =
                 if i = revIndex then nextA else a 
             ) |> setState
         
-        Html.div [
-            // prop.className $"relative top-[{a.Height}px]" 
+        Bulma.block [
+            prop.id "annoBlock"
             prop.style [
-                style.position.relative
+                style.position.absolute
+                // style.width.maxContent
                 style.top (int a.Height) 
             ]
             prop.children [
@@ -158,7 +158,8 @@ type Builder =
         // let (yCoordinate: float, setYCoordinate) = React.useState(0.0) 
  
         Bulma.columns [
-            prop.className "z-0 py-5 px-5 text-white"
+            prop.className "z-0 py-5 px-5 text-white relative"
+            prop.id "main-parent"
             prop.onClick (fun e -> modalContext.setter initialModal)
             prop.children [
                 Bulma.column [
@@ -205,6 +206,7 @@ type Builder =
                     ]
                 ]
                 Bulma.column [
+                    
                     prop.children [
                         if filehtml = Unset then
                             Html.none
