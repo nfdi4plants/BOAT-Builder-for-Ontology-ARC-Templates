@@ -36,7 +36,7 @@ type BOATelement =
             prop.style [
                 style.position.absolute
                 // style.width.maxContent
-                style.top (int a.Height) 
+                style.top (int a.Height + 45)
             ]
             prop.children [
                 Bulma.block [
