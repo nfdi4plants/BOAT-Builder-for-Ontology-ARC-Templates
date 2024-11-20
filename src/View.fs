@@ -46,9 +46,11 @@ type View =
             setter = setModal
             }
 
+        let elementID = "Paper"
+
         let modalactivator = 
             match modalState.isActive with
-                |true -> Contextmenu.onContextMenu (myModalContext, AnnotationState, setState)
+                |true -> Contextmenu.onContextMenu (myModalContext, AnnotationState, setState, elementID)
                 |false -> Html.none
         
         let currentpage,setpage = React.useState(Types.Page.Builder) 
@@ -66,7 +68,7 @@ type View =
                             prop.className "grow"
                             prop.children [
                                 match currentpage with
-                                |Types.Page.Builder -> Components.Builder.Main( AnnotationState, setState, isLocalStorageClear)
+                                |Types.Page.Builder -> Components.Builder.Main( AnnotationState, setState, isLocalStorageClear,elementID)
                                 |Types.Page.Contact -> Components.Contact.Main()
                                 |Types.Page.Help -> Components.Help.Main()
                                 modalactivator

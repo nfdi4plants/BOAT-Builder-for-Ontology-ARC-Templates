@@ -44,16 +44,17 @@ module private Helper =
 
 module private Functions =
 
-    let addAnnotationKeyNew (state: Annotation list, setState: Annotation list -> unit) ()=        
+    let addAnnotationKeyNew (state: Annotation list, setState: Annotation list -> unit, elementID: string) ()=        
         let term = window.getSelection().ToString().Trim()
         let yCoordinateOfSelection  =
             match window.getSelection() with
             | (selection: Selection) when selection.rangeCount > 0 ->
                 let range = selection.getRangeAt(0)
                 let rect = range.getBoundingClientRect()
-
-                rect.top 
-            | _ -> 0.0
+            
+                rect.top + window.scrollY
+                
+            | _ -> 0.0    
 
             // let parentPos = document.getElementById("main-parent").getBoundingClientRect()
             // let childPos = document.getElementById("annoBlock").getBoundingClientRect()
@@ -81,7 +82,7 @@ module private Functions =
                 // Get the bounding rectangle of the selected range
                 let rect = range.getBoundingClientRect()
                 // Return the Y coordinate relative to the viewport
-                rect.top
+                (rect.top + window.scrollY)
             | _ -> 0.0
 
         if term.Length <> 0 then 
@@ -128,10 +129,10 @@ open Helper
 open Functions
 
 module Contextmenu =
-    let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit)=
+    let private contextmenu (mousex: int, mousey: int) (resetter: unit -> unit, state: Annotation list, setState: Annotation list -> unit, elementID:string)=
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
-            button ("Add as new Key", resetter, state, addAnnotationKeyNew(state, setState), [])
+            button ("Add as new Key", resetter, state, addAnnotationKeyNew(state, setState, elementID), [])
             button ("Add as new Value", resetter,state, addAnnotationValueNew(state, setState), []) 
             divider
             Html.div [ 
@@ -164,10 +165,10 @@ module Contextmenu =
                 location = (0,0)
             }
 
-    let onContextMenu (modalContext:DropdownModal, state: Annotation list, setState: Annotation list -> unit) = 
+    let onContextMenu (modalContext:DropdownModal, state: Annotation list, setState: Annotation list -> unit, elementID:string) = 
         let resetter = fun () -> modalContext.setter initialModal //add actual function
         // let rmv = modalContext.setter initialModal 
-        contextmenu (modalContext.modalState.location) (resetter, state, setState)
+        contextmenu (modalContext.modalState.location) (resetter, state, setState,elementID)
 
 
 

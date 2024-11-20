@@ -32,7 +32,7 @@ type BOATelement =
             ) |> setState
         
         Bulma.block [
-            prop.id "annoBlock"
+            // prop.id "annoBlock"
             prop.style [
                 style.position.absolute
                 // style.width.maxContent
@@ -120,7 +120,7 @@ type BOATelement =
 
 type Builder =
     [<ReactComponent>]
-    static member Main (annoState: Annotation list, setState: Annotation list -> unit, isLocalStorageClear: string -> unit -> bool) =
+    static member Main (annoState: Annotation list, setState: Annotation list -> unit, isLocalStorageClear: string -> unit -> bool, elementID) =
 
         let initialFile (id: string) =
             if isLocalStorageClear id () = true then Unset
@@ -158,7 +158,7 @@ type Builder =
         // let (yCoordinate: float, setYCoordinate) = React.useState(0.0) 
  
         Bulma.columns [
-            prop.className "z-0 py-5 px-5 text-white relative"
+            prop.className "z-0 py-5 px-5 text-white "
             prop.id "main-parent"
             prop.onClick (fun e -> modalContext.setter initialModal)
             prop.children [
@@ -198,7 +198,7 @@ type Builder =
                             )
                             // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
                             prop.children [
-                                Components.DisplayHtml(filehtml, annoState)
+                                Components.DisplayHtml(filehtml, annoState, elementID)
                             ]
                         ]
                         // | PDF pdfSource ->
@@ -206,7 +206,7 @@ type Builder =
                     ]
                 ]
                 Bulma.column [
-                    
+                    prop.className "relative"
                     prop.children [
                         if filehtml = Unset then
                             Html.none
