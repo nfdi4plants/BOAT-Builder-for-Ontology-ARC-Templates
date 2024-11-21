@@ -92,10 +92,10 @@ type Components =
                     isActive = true;
                     location = int e.pageX, int e.pageY
                 }
+                e.stopPropagation() 
+                e.preventDefault()
             else 
                 ()
-            e.stopPropagation()
-            e.preventDefault()
         )
         prop.children [
           Html.embed [

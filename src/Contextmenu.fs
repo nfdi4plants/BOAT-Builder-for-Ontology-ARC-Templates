@@ -28,7 +28,6 @@ module private Helper =
                     
                     ()
                 )   
-                preventDefault
                 prop.onBlur (fun _ -> resetter() )
                 yield! props
                 prop.text name
@@ -39,7 +38,6 @@ module private Helper =
             prop.className "border border-slate-400"
             prop.style 
                 [style.margin(2,0); style.width (length.perc 80); style.margin length.auto; style.margin (length.rem 0)]  
-            preventDefault
         ]        
 
 module private Functions =
@@ -53,12 +51,13 @@ module private Functions =
                 let range = selection.getRangeAt(0)
                 let rect = range.getBoundingClientRect()
                 let relativeParent = document.getElementById("Paper").getBoundingClientRect()
-                rect.bottom - relativeParent.top
+                rect.bottom - relativeParent.top + 40.0
                 
             | _ -> 0.0    
 
-        if term.Length <> 0 then 
-            let newAnnoList = Annotation.init(OntologyAnnotation(term), height = yCoordinateOfSelection)::state
+        if term.Length <> 0 then
+            let closedList = state |> List.map (fun a -> {a with IsOpen = false}) 
+            let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term), height = yCoordinateOfSelection)::closedList
             setState newAnnoList
 
         else 
@@ -77,12 +76,13 @@ module private Functions =
                 let range = selection.getRangeAt(0)
                 let rect = range.getBoundingClientRect()
                 let relativeParent = document.getElementById("Paper").getBoundingClientRect()
-                rect.bottom - relativeParent.top
+                rect.bottom - relativeParent.top + 40.0
                 
-            | _ -> 0.0    
+            | _ -> 0.0     
 
-        if term.Length <> 0 then 
-            let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term), height = yCoordinateOfSelection)::state
+        if term.Length <> 0 then
+            let closedList = state |> List.map (fun a -> {a with IsOpen = false}) 
+            let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term), height = yCoordinateOfSelection)::closedList
             setState newAnnoList
             
         else 
@@ -91,8 +91,7 @@ module private Functions =
         log yCoordinateOfSelection
 
         Browser.Dom.window.getSelection().removeAllRanges()   
-
-    let propPlaceHolder() =  () //replace with other functions
+       
 
     let addToLastAnnoAsKey(state: Annotation list, setState: Annotation list -> unit) () =
         let term = window.getSelection().ToString().Trim()
@@ -134,7 +133,6 @@ module Contextmenu =
             Html.div [ 
                 prop.className "text-gray-500 text-sm p-1"
                 prop.text "Add to last annotation .."
-                preventDefault
             ]
             button ("as Key", resetter,state, addToLastAnnoAsKey(state, setState),  [])
             button ("as Value", resetter,state, addToLastAnnoAsValue(state, setState),  [])
@@ -147,7 +145,8 @@ module Contextmenu =
                 style.backgroundColor " "
                 style.position.absolute
                 style.left mousex
-                style.top mousey
+                if mousey > (int (window.innerHeight - 200.0)) then style.top (mousey - 200) //if the mouse is closer than 200px to the lower border, then shift the cm 200pc above
+                else style.top mousey
                 style.width 150
                 style.zIndex 40
             ]

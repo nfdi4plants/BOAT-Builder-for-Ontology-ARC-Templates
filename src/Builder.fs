@@ -9,6 +9,7 @@ open Fable.SimpleJson
 open Fable.Core.JS
 open System
 open ARCtrl
+open Fable.Core.JsInterop
 
 module List =
   let rec removeAt index list =
@@ -36,7 +37,7 @@ type BOATelement =
             prop.style [
                 style.position.absolute
                 // style.width.maxContent
-                style.top (int a.Height + 45)
+                style.top (int a.Height)
             ]
             prop.children [
                 Bulma.block [
@@ -45,18 +46,26 @@ type BOATelement =
                             Html.i [
                                 prop.className "fa-solid fa-comment-dots"
                                 prop.style [style.color "#ffe699"]
-                                prop.onClick (fun e -> updateAnnotation (fun a -> a.ToggleOpen()))
+                                prop.onClick (fun e ->
+                                    (annoState |> List.mapi (fun i e ->
+                                        if i = revIndex then e.ToggleOpen() 
+                                        else {e with IsOpen = false}
+                                    )) |> setState 
+                                    // updateAnnotation (fun a -> a.ToggleOpen())                              
+                                )
                             ]
                         ] 
                     else
                         Html.div [
-                            prop.className "bg-[#ffe699] p-3 text-black"
+                            prop.className "bg-[#ffe699] p-3 text-black z-50"
                             prop.children [
                                 Bulma.columns [
                                     Bulma.column [
                                         column.is1
                                         prop.className "hover:bg-[#ffd966] cursor-pointer"
-                                        prop.onClick (fun e -> updateAnnotation (fun a -> a.ToggleOpen()))
+                                        prop.onClick (fun e -> updateAnnotation (fun a -> a.ToggleOpen())
+                                        
+                                        )
                                         prop.children [
                                             Html.span [
                                                 Html.i [
@@ -155,9 +164,9 @@ type Builder =
             {new IDisposable with member this.Dispose() = window.removeEventListener ("resize", turnOffContext) }    
         )
 
-        // let (yCoordinate: float, setYCoordinate) = React.useState(0.0) 
- 
         Bulma.columns [
+            if modalContext.modalState.isActive = true then document.body.setAttribute("style", "overflow-y: hidden; scrollbar-gutter: stable")
+            else document.body.setAttribute("style", "overflow: auto; overflow-x:hidden;")
             prop.className "z-0 py-5 px-5 text-white "
             prop.id "main-parent"
             prop.onClick (fun e -> modalContext.setter initialModal)
@@ -191,11 +200,12 @@ type Builder =
                                         isActive = true;
                                         location = int e.pageX, int e.pageY
                                     }
+                                    e.stopPropagation() 
+                                    e.preventDefault()
                                 else 
                                     ()
-                                e.stopPropagation() 
-                                e.preventDefault()
                             )
+                            
                             // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
                             prop.children [
                                 Components.DisplayHtml(filehtml, annoState, elementID)
