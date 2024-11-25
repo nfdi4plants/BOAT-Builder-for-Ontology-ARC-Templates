@@ -16,8 +16,6 @@ module private Helper =
             e.preventDefault()
         ) 
 
-
-
     let button (name:string, resetter: unit -> unit, state, func: unit -> unit, props) =
         Html.li [
             Html.div [
@@ -57,8 +55,10 @@ module private Functions =
 
         if term.Length <> 0 then
             let closedList = state |> List.map (fun a -> {a with IsOpen = false}) 
-            let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term), height = yCoordinateOfSelection)::closedList
+            let newAnnoList = Annotation.init(OntologyAnnotation(term), height = yCoordinateOfSelection)::closedList
             setState newAnnoList
+            // let newAnnoList = Annotation.init(OntologyAnnotation(term), height = yCoordinateOfSelection)::state
+            // setState newAnnoList
 
         else 
             ()
@@ -84,6 +84,8 @@ module private Functions =
             let closedList = state |> List.map (fun a -> {a with IsOpen = false}) 
             let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term), height = yCoordinateOfSelection)::closedList
             setState newAnnoList
+        // let newAnnoList = Annotation.init(value = CompositeCell.createFreeText(term), height = yCoordinateOfSelection)::state
+        // setState newAnnoList
             
         else 
             ()

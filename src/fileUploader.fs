@@ -64,6 +64,7 @@ module Highlight =
           acc.Replace(key, $"<mark>{key}</mark>")
         ) text list
 
+
         
 
       // List.fold (fun (acc: string) value -> 
@@ -74,8 +75,8 @@ module Highlight =
 type Components =
     static member DisplayHtml(htmlString: string, annoList: Annotation list, elementID: string) = 
       Html.div [    
-            prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList)))
-            // prop.innerHtml htmlString
+            // prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList)))
+            prop.innerHtml htmlString
             prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"  
             prop.id elementID         
       ]
