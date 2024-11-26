@@ -27,6 +27,14 @@ html, body {
     background-color: #183641
 }
 
+::highlight(keyColor) {
+    background-color: #ffe699;
+  }
+
+::highlight(valueColor) {
+background-color: #4fb3d9;
+}
+
 // html {
 //     overflow:auto;
 // }

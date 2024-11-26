@@ -187,7 +187,7 @@ type Builder =
                     column.isHalf
                     prop.children [
                         match filehtml with
-                        | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-sky-400"]
+                        | Unset -> Html.p [prop.text "Upload a file!"; prop.className "bg-[#4fb3d9]"]
                         | Docx filehtml ->
                         Bulma.block [
                             prop.text fileName

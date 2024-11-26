@@ -44,18 +44,18 @@ module private FileReaderHelper =
 module Highlight =
 
   let keyList(annoList: Annotation list) = 
-    [
+    [|
         for a in annoList do
             (a.Key |> Option.map (fun e -> e.Name.Value)|> Option.defaultValue "")
-    ]
+    |]
   let valuelist(annoList: Annotation list) = 
-    [
+    [|
         for a in annoList do
             (a.Value |> Option.map (fun e -> e.ToString()) |> Option.defaultValue "" )
-    ]
+    |]
 
-  let allList (annoList: Annotation list) =
-    keyList(annoList) @ valuelist(annoList)
+  // let allList (annoList: Annotation list) =
+  //   keyList(annoList) @ valuelist(annoList)
 
 
   let highlightAnnos(text: string, list: string list) =
@@ -74,11 +74,14 @@ module Highlight =
 
 type Components =
     static member DisplayHtml(htmlString: string, annoList: Annotation list, elementID: string) = 
-      Html.div [    
-            // prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList)))
-            prop.innerHtml htmlString
-            prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"  
-            prop.id elementID         
+      // Html.div [    
+      //       // prop.innerHtml (Highlight.highlightAnnos (htmlString, Highlight.keyList (annoList)))
+      //       prop.dangerouslySetInnerHTML htmlString
+      //       prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"  
+      //       prop.id elementID        
+      // ]
+      Html.div [
+        Components.PaperWithMarker.Main(htmlString, Highlight.keyList(annoList), Highlight.valuelist(annoList), elementID)
       ]
 
 
