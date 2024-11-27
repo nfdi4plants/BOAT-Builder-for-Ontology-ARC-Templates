@@ -187,7 +187,7 @@ type Builder =
                     column.isHalf
                     prop.children [
                         match filehtml with
-                        | Unset -> Html.p [prop.text "Upload a file!"; prop.className "bg-[#4fb3d9]"]
+                        | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-[#4fb3d9]"]
                         | Docx filehtml ->
                         Bulma.block [
                             prop.text fileName
@@ -211,6 +211,7 @@ type Builder =
                                 Components.DisplayHtml(filehtml, annoState, elementID)
                             ]
                         ]
+                        
                         // | PDF pdfSource ->
                         //        Components.DisplayPDF(pdfSource, modalContext)
                     ]

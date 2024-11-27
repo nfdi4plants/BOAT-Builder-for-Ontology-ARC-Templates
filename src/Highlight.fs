@@ -39,10 +39,11 @@ type PaperWithMarker =
           currentNode <- treewalker.nextNode()
         setMarkedNodes nodes
     )
-    React.useEffect( //highlight keys
+    React.useEffect(
       (fun () ->
+        //keys
         CSS.highlights.clear()
-        let ranges =
+        let rangesKey =
           markedNodes
           |> Array.ofSeq
           |> Array.map (fun n -> {|Node = n; Text = n.textContent.ToLower()|})
@@ -62,10 +63,39 @@ type PaperWithMarker =
             |]
           )
           |> ResizeArray
-        let highlight = new Highlight(ranges)
-        CSS.highlights.set "keyColor" highlight 
+        let highlightKeys = new Highlight(rangesKey)
+        CSS.highlights.set "keyColor" highlightKeys; 
+        // values
+        let rangesValues=
+          markedNodes
+          |> Array.ofSeq
+          |> Array.map (fun n -> {|Node = n; Text = n.textContent.ToLower()|})
+          |> Array.collect (fun n ->
+            let indices: ResizeArray<int * int> = ResizeArray()
+            for phrase0 in markedValues do 
+              let phrase = phrase0.Trim().ToLower()
+              let index = n.Text.IndexOf(phrase)
+              if index > -1 then
+                indices.Add(index, index + phrase.Length)
+            [|
+              for startIndex, endIndex in indices do
+                let range = new Range()
+                range.setStart n.Node startIndex
+                range.setEnd n.Node endIndex
+                range
+            |]
+          )
+          |> ResizeArray
+        let highlightValues = new Highlight(rangesValues)
+        CSS.highlights.set "valueColor" highlightValues 
       )
     )
+    Html.div [    
+        prop.dangerouslySetInnerHTML htmlString
+        prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"  
+        prop.id elementID   
+        prop.ref ref      
+    ]
     // React.useEffect( //highlight values
     //   (fun () ->
     //     CSS.highlights.clear()
@@ -93,10 +123,4 @@ type PaperWithMarker =
     //     CSS.highlights.set "valueColor" highlight
     //   )
     // )
-    Html.div [    
-        prop.dangerouslySetInnerHTML htmlString
-        prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"  
-        prop.id elementID   
-        prop.ref ref      
-    ]
     

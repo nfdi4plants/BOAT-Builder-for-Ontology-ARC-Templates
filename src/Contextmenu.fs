@@ -107,8 +107,6 @@ module private Functions =
 
             setState newAnnoList
 
-            
-
     let addToLastAnnoAsValue(state: Annotation list, setState: Annotation list -> unit) () =
         let term = window.getSelection().ToString().Trim()
         if term.Length <> 0 then 
