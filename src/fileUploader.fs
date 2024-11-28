@@ -115,7 +115,7 @@ type Components =
       ]
 
 
-    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setFileName setLocalFileName=
+    static member private FileUpload (ref: IRefValue<Browser.Types.HTMLInputElement option>) filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setFileName setLocalFileName modalState toggleState=
       Html.div [
         Bulma.block [
           Html.div [
@@ -228,6 +228,7 @@ type Components =
             ]
           ]
         ]
+
       ]
 
       
@@ -240,6 +241,8 @@ type Components =
     
         let uploadFileType, setUploadFileType = React.useState(UploadFileType.Docx)
 
+        let modalState, toggleState = React.useState(false)
+
         let setLocalFile (id: string)(nextFile: UploadedFile) =
             let JSONString = Json.stringify nextFile 
             Browser.WebStorage.localStorage.setItem(id, JSONString)
@@ -251,7 +254,7 @@ type Components =
               Html.div [
                   prop.className "container"
                   prop.children [
-                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setFileName setLocalFileName
+                    Components.FileUpload ref filehtml uploadFileType setUploadFileType setFilehtml setLocalFile setState setFileName setLocalFileName modalState toggleState 
                   ]
               ]
           ]

@@ -7,10 +7,10 @@
     <Compile Include="Types.fs" />
     <Compile Include="Context.fs" />
     <Compile Include="Extensions.fs" />
-    <Compile Include="Highlight.fs" />
     <Compile Include="Controller.fs" />
     <Compile Include="Contextmenu.fs" />
     <Compile Include="Mammoth.fs" />
+    <Compile Include="Highlight.fs" />
     <Compile Include="fileUploader.fs" />
     <Compile Include="Builder.fs" />
     <Compile Include="NavBar.fs" />

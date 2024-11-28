@@ -41,54 +41,55 @@ type PaperWithMarker =
     )
     React.useEffect(
       (fun () ->
-        //keys
-        CSS.highlights.clear()
-        let rangesKey =
-          markedNodes
-          |> Array.ofSeq
-          |> Array.map (fun n -> {|Node = n; Text = n.textContent.ToLower()|})
-          |> Array.collect (fun n ->
-            let indices: ResizeArray<int * int> = ResizeArray()
-            for phrase0 in markedKeys do 
-              let phrase = phrase0.Trim().ToLower()
-              let index = n.Text.IndexOf(phrase)
-              if index > -1 then
-                indices.Add(index, index + phrase.Length)
-            [|
-              for startIndex, endIndex in indices do
-                let range = new Range()
-                range.setStart n.Node startIndex
-                range.setEnd n.Node endIndex
-                range
-            |]
-          )
-          |> ResizeArray
-        let highlightKeys = new Highlight(rangesKey)
-        CSS.highlights.set "keyColor" highlightKeys; 
-        // values
-        let rangesValues=
-          markedNodes
-          |> Array.ofSeq
-          |> Array.map (fun n -> {|Node = n; Text = n.textContent.ToLower()|})
-          |> Array.collect (fun n ->
-            let indices: ResizeArray<int * int> = ResizeArray()
-            for phrase0 in markedValues do 
-              let phrase = phrase0.Trim().ToLower()
-              let index = n.Text.IndexOf(phrase)
-              if index > -1 then
-                indices.Add(index, index + phrase.Length)
-            [|
-              for startIndex, endIndex in indices do
-                let range = new Range()
-                range.setStart n.Node startIndex
-                range.setEnd n.Node endIndex
-                range
-            |]
-          )
-          |> ResizeArray
-        let highlightValues = new Highlight(rangesValues)
-        CSS.highlights.set "valueColor" highlightValues 
-      )
+          if CSS.highlights.Equals(null) then ()
+          else         
+            CSS.highlights.clear()
+            let rangesKey =
+              markedNodes
+              |> Array.ofSeq
+              |> Array.map (fun n -> {|Node = n; Text = n.textContent.ToLower()|})
+              |> Array.collect (fun n ->
+                let indices: ResizeArray<int * int> = ResizeArray()
+                for phrase0 in markedKeys do 
+                  let phrase = phrase0.Trim().ToLower()
+                  let index = n.Text.IndexOf(phrase)
+                  if index > -1 then
+                    indices.Add(index, index + phrase.Length)
+                [|
+                  for startIndex, endIndex in indices do
+                    let range = new Range()
+                    range.setStart n.Node startIndex
+                    range.setEnd n.Node endIndex
+                    range
+                |]
+              )
+              |> ResizeArray
+            let highlightKeys = new Highlight(rangesKey)
+            CSS.highlights.set "keyColor" highlightKeys; 
+            // values
+            let rangesValues=
+              markedNodes
+              |> Array.ofSeq
+              |> Array.map (fun n -> {|Node = n; Text = n.textContent.ToLower()|})
+              |> Array.collect (fun n ->
+                let indices: ResizeArray<int * int> = ResizeArray()
+                for phrase0 in markedValues do 
+                  let phrase = phrase0.Trim().ToLower()
+                  let index = n.Text.IndexOf(phrase)
+                  if index > -1 then
+                    indices.Add(index, index + phrase.Length)
+                [|
+                  for startIndex, endIndex in indices do
+                    let range = new Range()
+                    range.setStart n.Node startIndex
+                    range.setEnd n.Node endIndex
+                    range
+                |]
+              )
+              |> ResizeArray
+            let highlightValues = new Highlight(rangesValues)
+            CSS.highlights.set "valueColor" highlightValues 
+        )
     )
     Html.div [    
         prop.dangerouslySetInnerHTML htmlString

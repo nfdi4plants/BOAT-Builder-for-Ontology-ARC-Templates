@@ -163,6 +163,7 @@ type Builder =
             Browser.Dom.window.addEventListener ("resize", turnOffContext)
             {new IDisposable with member this.Dispose() = window.removeEventListener ("resize", turnOffContext) }    
         )
+        let modalState, toggleState = React.useState(false)
 
         Bulma.columns [
             if modalContext.modalState.isActive = true then document.body.setAttribute("style", "overflow-y: hidden; scrollbar-gutter: stable")
@@ -171,6 +172,19 @@ type Builder =
             prop.id "main-parent"
             prop.onClick (fun e -> modalContext.setter initialModal)
             prop.children [
+                Bulma.modal [
+                    prop.id "modal-sample"
+                    if modalState then Bulma.modal.isActive
+                    prop.children [
+                        Bulma.modalBackground []
+                        Bulma.modalContent [
+                            Bulma.box [
+                                Html.h1 "CSS Custom Highlight API is not supported"
+                            ]
+                        ]
+                        Bulma.modalClose [ prop.onClick (fun _ -> toggleState(false))]
+                    ]
+                ]
                 Bulma.column [
                     column.isOneFifth
                     prop.children [
