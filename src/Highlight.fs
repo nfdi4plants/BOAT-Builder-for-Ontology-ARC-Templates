@@ -3,6 +3,7 @@ namespace Components
 open Feliz
 open Fable.Core
 open Fable.Core.JsInterop
+open Feliz.Bulma
 
 
 [<EmitConstructor; Global>]
@@ -28,6 +29,9 @@ type PaperWithMarker =
   static member Main(htmlString: string, markedKeys: string [], markedValues: string [], elementID: string) =
     let ref = React.useElementRef()
     let markedNodes, setMarkedNodes = React.useState(ResizeArray())
+    let APIwarningModalState, setwarningModal = React.useState(false)
+    let hasClosed, setHasClosed = React.useState (false)
+    
     React.useEffectOnce(fun _ -> 
       if ref.current.IsSome then
         // https://developer.mozilla.org/en-US/docs/Web/API/Document/createTreeWalker
@@ -41,7 +45,7 @@ type PaperWithMarker =
     )
     React.useEffect(
       (fun () ->
-          if CSS.highlights.Equals(null) then ()
+          if CSS.highlights.Equals(null) then setwarningModal true
           else         
             CSS.highlights.clear()
             let rangesKey =
@@ -91,11 +95,32 @@ type PaperWithMarker =
             CSS.highlights.set "valueColor" highlightValues 
         )
     )
-    Html.div [    
+    Html.div [
+      Bulma.modal [
+        prop.id "modal-sample"
+        if APIwarningModalState = true && hasClosed = false then Bulma.modal.isActive
+        else ()
+        prop.children [
+          Bulma.modalBackground []
+          Bulma.modalContent [
+            Bulma.box [
+              Bulma.block [
+                Html.p "API highlighting is not compatible with your browser"
+              ]
+              Bulma.button.button [
+                prop.text "Got it"
+                prop.onClick (fun _ -> setHasClosed(true))
+              ]
+            ]
+          ]
+        ]
+      ] 
+      Html.div [    
         prop.dangerouslySetInnerHTML htmlString
         prop.className "prose bg-slate-100 p-3 text-black max-w-4xl"  
         prop.id elementID   
         prop.ref ref      
+      ]
     ]
     // React.useEffect( //highlight values
     //   (fun () ->
