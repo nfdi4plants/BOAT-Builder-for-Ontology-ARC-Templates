@@ -107,7 +107,7 @@ type PaperWithMarker =
                 Html.p "Text highlighting is not compatible with your browser."
                 Html.a [
                     prop.text "View compatible browsers."
-                    prop.href "https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API#api.highlight"
+                    prop.href "https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API#browser_compatibility"
                     prop.target.blank 
                     prop.className "underline text-blue-400"
                 ]
@@ -127,31 +127,4 @@ type PaperWithMarker =
         prop.ref ref      
       ]
     ]
-    // React.useEffect( //highlight values
-    //   (fun () ->
-    //     CSS.highlights.clear()
-    //     let ranges =
-    //       markedNodes
-    //       |> Array.ofSeq
-    //       |> Array.map (fun n -> {|Node = n; Text = n.textContent.ToLower()|})
-    //       |> Array.collect (fun n ->
-    //         let indices: ResizeArray<int * int> = ResizeArray()
-    //         for phrase0 in markedValues do 
-    //           let phrase = phrase0.Trim()
-    //           let index = n.Text.IndexOf(phrase)
-    //           if index > -1 then
-    //             indices.Add(index, index + phrase.Length)
-    //         [|
-    //           for startIndex, endIndex in indices do
-    //             let range = new Range()
-    //             range.setStart n.Node startIndex
-    //             range.setEnd n.Node endIndex
-    //             range
-    //         |]
-    //       )
-    //       |> ResizeArray
-    //     let highlight = new Highlight(ranges)
-    //     CSS.highlights.set "valueColor" highlight
-    //   )
-    // )
-    
+

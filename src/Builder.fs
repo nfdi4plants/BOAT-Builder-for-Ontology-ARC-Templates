@@ -33,10 +33,8 @@ type BOATelement =
             ) |> setState
         
         Bulma.block [
-            // prop.id "annoBlock"
             prop.style [
-                style.position.absolute
-                // style.width.maxContent
+                style.position.relative
                 style.top (int a.Height)
             ]
             prop.children [
@@ -57,7 +55,7 @@ type BOATelement =
                         ] 
                     else
                         Html.div [
-                            prop.className "bg-[#ffe699] p-3 text-black z-50"
+                            prop.className "bg-[#ffe699] p-3 text-black z-50 max-w-96"
                             prop.children [
                                 Bulma.columns [
                                     Bulma.column [
@@ -182,16 +180,40 @@ type Builder =
                         ]
                     ]
                 ]
-
                 Bulma.column [
-                    column.isHalf
-                    prop.children [
-                        match filehtml with
-                        | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-[#4fb3d9]"]
-                        | Docx filehtml ->
-                        Bulma.block [
-                            prop.text fileName
+                    Bulma.columns [
+                      Bulma.column [
+                        column.isHalf
+                        prop.className "relative"
+                        prop.children [
+                            Bulma.block [
+                                prop.text fileName
+                            ]
+                            
+                            // | PDF pdfSource ->
+                            //        Components.DisplayPDF(pdfSource, modalContext)
                         ]
+                      ]
+                      Bulma.column [
+                          prop.className "relative"
+                          prop.children [
+                              if filehtml = Unset then
+                                  Html.none
+                              else
+                                  Bulma.block [
+                                      prop.text "Annotations"
+                                  ]
+                                  // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
+                          ]
+                      ]
+                    ]
+                      
+                    match filehtml with
+                      | Unset -> Html.p [prop.text "Upload a file!"; prop.className "text-[#4fb3d9]"]
+                      | Docx filehtml ->
+                    Html.div [
+                      prop.className "relative"
+                      prop.children [
                         Bulma.block [
                             prop.onContextMenu (fun e ->
                                 let term = window.getSelection().ToString().Trim() 
@@ -205,29 +227,20 @@ type Builder =
                                 else 
                                     ()
                             )
-                            
-                            // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
+                            prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
                             prop.children [
-                                Components.DisplayHtml(filehtml, annoState, elementID)
+                                Bulma.columns [
+                                    Bulma.column [
+                                        Components.DisplayHtml(filehtml, annoState, elementID)
+                                    ]
+                                    Bulma.column [
+                                        for a in 0 .. annoState.Length - 1 do
+                                            BOATelement.annoBlock (annoState, setState, a)    
+                                    ]
+                                ]
                             ]
                         ]
-                        
-                        // | PDF pdfSource ->
-                        //        Components.DisplayPDF(pdfSource, modalContext)
-                    ]
-                ]
-                Bulma.column [
-                    prop.className "relative"
-                    prop.children [
-                        if filehtml = Unset then
-                            Html.none
-                        else
-                            Bulma.block [
-                                prop.text "Annotations"
-                            ]
-                                // prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
-                            for a in 0 .. annoState.Length - 1 do
-                                BOATelement.annoBlock (annoState, setState, a)
+                      ]
                     ]
                 ]
             ]
