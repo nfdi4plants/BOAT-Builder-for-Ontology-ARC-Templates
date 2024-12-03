@@ -97,7 +97,6 @@ type PaperWithMarker =
     )
     Html.div [
       Bulma.modal [
-        prop.id "modal-sample"
         if APIwarningModalState = true && hasClosed = false then Bulma.modal.isActive
         else ()
         prop.children [
@@ -105,7 +104,13 @@ type PaperWithMarker =
           Bulma.modalContent [
             Bulma.box [
               Bulma.block [
-                Html.p "API highlighting is not compatible with your browser"
+                Html.p "Text highlighting is not compatible with your browser."
+                Html.a [
+                    prop.text "View compatible browsers."
+                    prop.href "https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API#api.highlight"
+                    prop.target.blank 
+                    prop.className "underline text-blue-400"
+                ]
               ]
               Bulma.button.button [
                 prop.text "Got it"
