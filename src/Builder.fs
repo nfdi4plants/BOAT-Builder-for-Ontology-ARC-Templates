@@ -35,7 +35,7 @@ type BOATelement =
         Bulma.block [
             prop.style [
                 style.position.relative
-                style.top (int a.Height)
+                style.top (int a.Height )
             ]
             prop.children [
                 Bulma.block [
@@ -238,8 +238,11 @@ type Builder =
                                         ]
                                     ]
                                     Bulma.column [
-                                        for a in 0 .. annoState.Length - 1 do
-                                            BOATelement.annoBlock (annoState, setState, a)    
+                                        prop.className ""
+                                        prop.children [
+                                            for a in 0 .. annoState.Length - 1 do
+                                                BOATelement.annoBlock (annoState, setState, a)    
+                                        ]
                                     ]
                                 ]
                             ]

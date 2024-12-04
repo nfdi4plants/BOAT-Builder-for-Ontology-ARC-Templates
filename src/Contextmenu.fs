@@ -48,8 +48,8 @@ module private Functions =
             | (selection: Selection) when selection.rangeCount > 0 ->
                 let range = selection.getRangeAt(0)
                 let rect = range.getBoundingClientRect()
-                let relativeParent = document.getElementById("Paper").getBoundingClientRect()
-                rect.bottom - relativeParent.top
+                let relativeParent = document.getElementById(elementID).getBoundingClientRect()
+                rect.bottom - relativeParent.top - 10.0
                 
             | _ -> 0.0    
 
@@ -68,15 +68,15 @@ module private Functions =
         Browser.Dom.window.getSelection().removeAllRanges()  
 
         
-    let addAnnotationValueNew (state: Annotation list, setState: Annotation list -> unit) ()=  
+    let addAnnotationValueNew (state: Annotation list, setState: Annotation list -> unit, elementID: string) ()=  
         let term = window.getSelection().ToString().Trim()      
         let yCoordinateOfSelection  =
             match window.getSelection() with
             | (selection: Selection) when selection.rangeCount > 0 ->
                 let range = selection.getRangeAt(0)
                 let rect = range.getBoundingClientRect()
-                let relativeParent = document.getElementById("Paper").getBoundingClientRect()
-                rect.bottom - relativeParent.top 
+                let relativeParent = document.getElementById(elementID).getBoundingClientRect()
+                rect.bottom - relativeParent.top - 10.0
                 
             | _ -> 0.0     
 
@@ -128,7 +128,7 @@ module Contextmenu =
         /// This element will remove the contextmenu when clicking anywhere else
         let buttonList = [
             button ("Add as new Key", resetter, state, addAnnotationKeyNew(state, setState, elementID), [])
-            button ("Add as new Value", resetter,state, addAnnotationValueNew(state, setState), []) 
+            button ("Add as new Value", resetter,state, addAnnotationValueNew(state, setState,elementID), []) 
             divider
             Html.div [ 
                 prop.className "text-gray-500 text-sm p-1"
