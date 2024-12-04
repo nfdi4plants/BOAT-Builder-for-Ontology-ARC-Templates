@@ -163,7 +163,7 @@ type Builder =
         )
 
         Bulma.columns [
-            if modalContext.modalState.isActive = true then document.body.setAttribute("style", "overflow-y: hidden; scrollbar-gutter: stable")
+            if modalContext.modalState.isActive then document.body.setAttribute("style", "overflow-y: hidden; scrollbar-gutter: stable")
             else document.body.setAttribute("style", "overflow: auto; overflow-x:hidden;")
             prop.className "z-0 py-5 px-5 text-white "
             prop.id "main-parent"
@@ -183,7 +183,7 @@ type Builder =
                 Bulma.column [
                     Bulma.columns [
                       Bulma.column [
-                        column.isHalf
+                        column.isThreeFifths
                         prop.className "relative"
                         prop.children [
                             Bulma.block [
@@ -227,11 +227,15 @@ type Builder =
                                 else 
                                     ()
                             )
-                            prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
+                            if modalContext.modalState.isActive = true then prop.className "overflow-x-hidden overflow-y-hidden h-[50rem]"
+                            else prop.className "overflow-x-hidden overflow-y-auto h-[50rem]"
                             prop.children [
                                 Bulma.columns [
                                     Bulma.column [
-                                        Components.DisplayHtml(filehtml, annoState, elementID)
+                                        column.isThreeFifths
+                                        prop.children [
+                                            Components.DisplayHtml(filehtml, annoState, elementID)
+                                        ]
                                     ]
                                     Bulma.column [
                                         for a in 0 .. annoState.Length - 1 do
