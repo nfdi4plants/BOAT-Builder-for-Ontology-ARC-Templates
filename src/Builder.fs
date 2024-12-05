@@ -31,12 +31,17 @@ type BOATelement =
             annoState |> List.mapi (fun i a ->
                 if i = revIndex then nextA else a 
             ) |> setState
+
+        let annosAfterCurrent: Annotation list = 
+            let splittedList = List.splitAt revIndex annoState
+            let before, after = splittedList
+            after
         
         Bulma.block [
             prop.style [
                 style.position.absolute
-                
-                style.top (int a.Height )
+                if a.IsOpen = true then annoState |> List.map (fun e -> style.top (int e.Height + 40)) 
+                else style.top (int a.Height)
             ]
             prop.children [
                 Bulma.block [
@@ -56,7 +61,7 @@ type BOATelement =
                         ] 
                     else
                         Html.div [
-                            prop.className "bg-[#ffe699] p-3 text-black z-50 max-w-96"
+                            prop.className "bg-[#ffe699] p-3 text-black z-50 max-w-96 mb-20"
                             prop.children [
                                 Bulma.columns [
                                     Bulma.column [
