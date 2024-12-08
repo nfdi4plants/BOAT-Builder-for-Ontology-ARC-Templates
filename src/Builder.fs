@@ -21,7 +21,7 @@ module List =
 // module Helperfunctions =
     
 type BOATelement =
-    static member annoBlocks (annoState: Annotation list, setState: Annotation list -> unit, index: int) =
+    static member annoBlock (annoState: Annotation list, setState: Annotation list -> unit, index: int) =
 
         let revIndex = annoState.Length - 1 - index
         let a = annoState.[revIndex]
@@ -40,8 +40,9 @@ type BOATelement =
         Bulma.block [
             prop.style [
                 style.position.absolute
-                if a.IsOpen = true then annoState |> List.map (fun e -> style.top (int e.Height + 40)) 
-                else style.top (int a.Height)
+                //if a.IsOpen = true then annoState |> List.map (fun e -> style.top (int e.Height + 40)) 
+                //else style.top (int a.Height)
+                style.top (int a.Height)
             ]
             prop.children [
                 Bulma.block [
