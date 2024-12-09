@@ -12,6 +12,9 @@
     <Compile Include="Mammoth.fs" />
     <Compile Include="Highlight.fs" />
     <Compile Include="fileUploader.fs" />
+    <Compile Include="Widgets.fs" />
+    <Compile Include="SearchComponent.fs" />
+    <Compile Include="SwateBuildingBlock.fs" />
     <Compile Include="Builder.fs" />
     <Compile Include="NavBar.fs" />
     <Compile Include="Footer.fs" />
