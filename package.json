@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "bulma": "^1.0.2",
+    "fable": "^3.0.145",
     "feliz": "^0.0.17",
     "mammoth": "^1.8.0",
     "memoize-one": "^6.0.0",

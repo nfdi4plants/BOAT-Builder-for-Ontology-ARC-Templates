@@ -111,6 +111,8 @@ type SwateComponent =
                     config.once <- true
                     Browser.Dom.document.addEventListener("mouseup", onmouseup, config)
                 )
+                
+
                 prop.className "shadow-md border border-base-300 space-y-4 rounded-lg border-r-2 bg-base-100"
                 prop.style [
                     style.zIndex 40
