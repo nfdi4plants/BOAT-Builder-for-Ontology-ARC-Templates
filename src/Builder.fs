@@ -20,7 +20,6 @@ module List =
     
 type BOATelement =
     static member annoBlock (annoState: Annotation list, setState: Annotation list -> unit, index: int) =
-
         let revIndex = annoState.Length - 1 - index
         let a = annoState.[revIndex]
 

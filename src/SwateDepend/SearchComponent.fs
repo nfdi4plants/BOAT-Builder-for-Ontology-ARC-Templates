@@ -70,6 +70,7 @@ let private SearchBuildingBlockBodyElement (model: Model, dispatch) =
                     Components.TermSearch.Input(setter, fullwidth=true, ?input=input, ?parent=parent, displayParent=false, ?portalTermSelectArea=element.current, isjoin=true, classes="border-current")
                 ]
             ]
+
         ]
     ]
 
