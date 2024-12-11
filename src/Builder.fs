@@ -3,13 +3,11 @@ namespace Components
 open Feliz
 open Feliz.Bulma
 open Browser.Dom
-open Browser.Types
 open Types
 open Fable.SimpleJson
-open Fable.Core.JS
 open System
 open ARCtrl
-open Fable.Core.JsInterop
+
 
 module List =
   let rec removeAt index list =

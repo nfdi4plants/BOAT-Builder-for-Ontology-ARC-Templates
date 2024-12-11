@@ -1,34 +1,52 @@
 module BuildingBlock.SearchComponent
 
 open Feliz
-open Feliz.DaisyUI
 open Fable.Core.JsInterop
+open Feliz.Bulma
 open Model.BuildingBlock
 open Model
 open Messages
 open ARCtrl
 open Shared
 
-// let private termOrUnitizedSwitch (model:Model) dispatch =
-//     let state = model.AddBuildingBlockState
-//     React.fragment [
-//         Daisy.button.a [
-//             join.item
-//             button.outline
-//             let isActive = state.BodyCellType = CompositeCellDiscriminate.Term
-//             if isActive then button.primary
-//             prop.onClick (fun _ -> BuildingBlock.UpdateBodyCellType CompositeCellDiscriminate.Term |> BuildingBlockMsg |> dispatch)
-//             prop.text "Term"
-//         ]
-//         Daisy.button.a [
-//             join.item
-//             button.outline
-//             let isActive = state.BodyCellType = CompositeCellDiscriminate.Unitized
-//             if isActive then button.primary
-//             prop.onClick (fun _ -> BuildingBlock.UpdateBodyCellType CompositeCellDiscriminate.Unitized |> BuildingBlockMsg |> dispatch)
-//             prop.text "Unit"
-//         ]
-//     ]
+let private termOrUnitizedSwitch (model:Model) dispatch =
+    let state = model.AddBuildingBlockState
+    React.fragment [
+    //     Bulma.button.a [
+    //         join.item
+    //         button.isOutlined
+    //         let isActive = state.BodyCellType = CompositeCellDiscriminate.Term
+    //         if isActive then button.primary
+    //         prop.onClick (fun _ -> BuildingBlock.UpdateBodyCellType CompositeCellDiscriminate.Term |> BuildingBlockMsg |> dispatch)
+    //         prop.text "Term"
+    //     ]
+    //     Bulma.button.a [
+    //         join.item
+    //         button.isOutlined
+    //         let isActive = state.BodyCellType = CompositeCellDiscriminate.Unitized
+    //         if isActive then button.primary
+    //         prop.onClick (fun _ -> BuildingBlock.UpdateBodyCellType CompositeCellDiscriminate.Unitized |> BuildingBlockMsg |> dispatch)
+    //         prop.text "Unit"
+    //     ]
+    // ]
+        Bulma.select [
+            Html.select [
+                Html.option [
+                    select.isMedium
+                    prop.text "Term"
+                    let isActive = state.BodyCellType = CompositeCellDiscriminate.Term
+                    if isActive then prop.className "button is-primary"
+                    prop.onClick (fun _ -> BuildingBlock.UpdateBodyCellType CompositeCellDiscriminate.Term |> BuildingBlockMsg |> dispatch)
+                ]
+                Html.option [
+                    prop.text "Unit"
+                    let isActive = state.BodyCellType = CompositeCellDiscriminate.Term
+                    if isActive then prop.className "button is-primary"
+                    prop.onClick (fun _ -> BuildingBlock.UpdateBodyCellType CompositeCellDiscriminate.Term |> BuildingBlockMsg |> dispatch)
+                ]
+            ]
+        ]
+    ]
 
 open Fable.Core
 
@@ -39,7 +57,7 @@ let private SearchBuildingBlockBodyElement (model: Model, dispatch) =
         prop.ref element
         prop.style [ style.position.relative ]
         prop.children [
-            Daisy.join [
+            Bulma.select [
                 prop.className "w-full"
                 prop.children [
                     termOrUnitizedSwitch model dispatch
@@ -63,7 +81,7 @@ let private SearchBuildingBlockHeaderElement (ui: BuildingBlockUIState, setUi, m
         prop.ref element // The ref must be place here, otherwise the portalled term select area will trigger daisy join syntax
         prop.style [style.position.relative]
         prop.children [
-            Daisy.join [
+            Bulma.select [
                 prop.className "w-full"
                 prop.children [
                     // Choose building block type dropdown element
@@ -78,7 +96,7 @@ let private SearchBuildingBlockHeaderElement (ui: BuildingBlockUIState, setUi, m
                         let input = model.AddBuildingBlockState.TryHeaderOA()
                         Components.TermSearch.Input(setter, fullwidth=true, ?input=input, isjoin=true, ?portalTermSelectArea=element.current, classes="border-current")
                     elif state.HeaderCellType.HasIOType() then
-                        Daisy.input [
+                        Bulma.input [
                             prop.readOnly true
                             prop.valueOrDefault (
                                 state.TryHeaderIO()
@@ -92,37 +110,37 @@ let private SearchBuildingBlockHeaderElement (ui: BuildingBlockUIState, setUi, m
 
     ]
 
-// let private scrollIntoViewRetry (id: string) =
-//     let rec loop (iteration: int) =
-//         let headerelement = Browser.Dom.document.getElementById(id)
-//         if isNull headerelement then
-//             if iteration < 5 then
-//                 Fable.Core.JS.setTimeout (fun _ -> loop (iteration+1)) 100 |> ignore
-//             else
-//                 ()
-//         else
-//             let rect = headerelement.getBoundingClientRect()
-//             if rect.left >= 0 && ((rect.right <= Browser.Dom.window.innerWidth) || (rect.right <= Browser.Dom.document.documentElement.clientWidth)) then
-//                 ()
-//             else
-//                 let config = createEmpty<Browser.Types.ScrollIntoViewOptions>
-//                 config.behavior <- Browser.Types.ScrollBehavior.Smooth
-//                 config.block <- Browser.Types.ScrollAlignment.End
-//                 config.``inline`` <- Browser.Types.ScrollAlignment.End
-//                 //log headerelement
-//                 headerelement.scrollIntoView(config)
-//     loop 0 
+let private scrollIntoViewRetry (id: string) =
+    let rec loop (iteration: int) =
+        let headerelement = Browser.Dom.document.getElementById(id)
+        if isNull headerelement then
+            if iteration < 5 then
+                Fable.Core.JS.setTimeout (fun _ -> loop (iteration+1)) 100 |> ignore
+            else
+                ()
+        else
+            let rect = headerelement.getBoundingClientRect()
+            if rect.left >= 0 && ((rect.right <= Browser.Dom.window.innerWidth) || (rect.right <= Browser.Dom.document.documentElement.clientWidth)) then
+                ()
+            else
+                let config = createEmpty<Browser.Types.ScrollIntoViewOptions>
+                config.behavior <- Browser.Types.ScrollBehavior.Smooth
+                config.block <- Browser.Types.ScrollAlignment.End
+                config.``inline`` <- Browser.Types.ScrollAlignment.End
+                //log headerelement
+                headerelement.scrollIntoView(config)
+    loop 0 
 
 let private AddBuildingBlockButton (model: Model) dispatch =
     let state = model.AddBuildingBlockState
     Html.div [
         prop.className "flex justify-center"
         prop.children [
-            Daisy.button.button  [
+            Bulma.button.button  [
                 let header = Helper.createCompositeHeaderFromState state
                 let body = Helper.tryCreateCompositeCellFromState state
                 let isValid = Helper.isValidColumn header
-                button.wide
+                button.isMedium
                 if isValid then
                     button.success
                 else

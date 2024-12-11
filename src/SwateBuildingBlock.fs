@@ -7,7 +7,6 @@ open Fable.SimpleJson
 open Feliz.Bulma
 open Widgets
 
-
 module private InitExtensions =
 
     type Rect with
